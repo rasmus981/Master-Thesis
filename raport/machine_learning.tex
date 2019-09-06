@@ -1,0 +1,72 @@
+\documentclass[11pt]{article}
+\usepackage{mypackages}
+\begin{document}
+
+
+
+\section{Machine Learning}\label{sec:machine_learning}
+
+A good understanding of machine learning (ML) is fundamental for the topics discussed through this project. ML will be used to solve the problem of classifying potatoes, estimate the size of avocado stones, and generate artificial x-ray images of potatoes and avocados. As mentioned in section \ref{sec:introduction}, the reader is expected to know the fundamentals of ML. This section will, therefore, not cover the basic, but discuss concepts relevant for this thesis. First, we compare the usual way of solving a ML problem with the one used in this project, followed by a discussion about generalization.
+
+
+\subsection{Solving a machine learning problem}
+
+The standard way of solving a ML task is to acquire data relevant to the problem. The data is then cleaned and preprocessed and split into a train, test, and validation set. The training set is used for training a ML model, and the test set is used to evaluate the performance of the model on unseen data after training. Most machine learning models use several hyper-parameters which can be tuned to achieve better results on the test set. The problem with tuning hyperparameters, is that the test set is no longer "unseen" datapoints, since it influences the architecture of the model. Therefore a validation set is used, to evaluate the performance on truly unseen data. Figure \ref{fig:ML_data_flow} illustrates a simplified pipeline for how a standard machine learning problem is solved.
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale = 0.45]{figurer/Introduction/data_flow_20.png}
+    \caption{Simplified workflow for a machine learning task}
+    \label{fig:ML_data_flow}
+\end{figure}
+\\ \\
+The objective of this project is not to develop a state of the art ML model to classify potatoes or estimating the size of avocado stones. Instead, we will investigate the effect of using generative models, to generate artificial data, and compare how these fake images works for data augmentation compared to more traditional techniques. No hyper-parameters optimization will be done in this project.
+\\ \\
+In this project will either the potato or avocado dataset be split into a train, test and validation set, but only into a training and test set. The two datasets are quite small in size, so having a validation set, would limiting the experiments discussed in section \ref{sec:experiments}, and since no hyperparameter optimization is performed is should theoretically be possible to refrain from using a validation set. To justify the results presented in section \ref{sec:results} when no validation set is used, a lot of models will be trained, and the training and test data for each model will be randomly sampled from the original dataset. 
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale = 0.4]{figurer/Introduction/data_flow_3.png}
+    \caption{Simplified workflow for the machine learning tasks covered in this thesis}
+    \label{fig:data_flow_2}
+\end{figure}
+
+\subsection{Generalization}
+
+The main challenge for a machine learning model is to perform well on new unseen data points, and not only the data used for training. This ability is known as generalization. A ML model, learns by updating its weights in a way that minimizes a loss function on the training set. Additionally, a test set is used to compute the test loss also called the generalization error.
+\\ 
+To achieve acceptable results using machine learning, it is assumed that all data used (both training and testing data) are independent identically distributed (i.i.d). For a dataset to be, i.i.d, all data points have to be independent from each other, and drawn from the same distribution. If the data is i.i.d, we can theoretical expect that the test loss will be greater than or equal to the training loss. When solving ML problems, we want the models to achieve both a small training loss and that the gap between training and test error to be small, which correspond to the fundamental challenge of underfitting vs. overfitting. Underfitting occurs in situations where a ML model isn't able to achieve a sufficiently low training error. While overfitting occurs when the model overfits on the training data, which causes the gap between the training and test error to be large. The main indicator of whether or not a model is likely to overfit or underfit is defined by the capacity. Capacity is a models ability to fit a wide variety of functions. Models with low capacity are likely to underfit, since the functions that the models can learn have trouble fitting the training data. Models with a high capacity are likely to overfit, since the model may learn a function that not serve the underlying distribution of data, which leads to poor generalization on the test set. The following figure illustrates the problem of underfitting and overfitting,
+\newpage
+\begin{figure}[!h]
+     \centering
+     \begin{subfigure}[b]{0.25\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figurer/machine_learning/underfitting.png}
+         \caption{}
+         \label{fig:underfitting_ML}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.25\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figurer/machine_learning/appropiate_fiiting.png}
+        \caption{}
+         \label{fig:appropriate_fitting_ML}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.25\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figurer/machine_learning/overfitting.png}
+         \caption{}
+         \label{fig:overfitting_ML}
+     \end{subfigure}
+    \caption{Here we see three models fitting the same dataset. (a) A linear model which have a small capacity, because its only able to learn a linear function, which seems to underfit on the data. (b) A low degree polynomial model which have a capacity that fits the problem and seems to find a appropriate fitting between the model complexity and the data. (c) A high degree polynomial model that have a high capacity, which seems to overfit on the data}
+        \label{fig:fitting}
+\end{figure}
+The next section focus on deep learning (DL), at the moment of this writing DL are state of the art for solving machine learning problem that includes images. Deep learning provides a framework that can fit a wide variety of functions. When neural networks becomes deep, the capacity increase radically, resulting in models that are likely to overfit, especially when trained on small datasets.
+
+
+
+
+
+
+
+\end{document}

@@ -1,0 +1,145 @@
+\documentclass[11pt]{article}
+\usepackage{mypackages}
+\begin{document}
+
+
+
+\section{Traditional data augmentation}\label{sec:data_augmentation}
+
+It can be challenging to acquire a sufficient amount of data, to develop machine learning models that achieve a satisfying performance to a task. The main problems with acquiring data is that it can be quiet time-consuming and costly in some cases. There even exists Data Marketplaces like \url{www.dataandsons.com} where datasets are sold for more than $40,000.00\$$. Data has been worth money. Simply because without a sufficient amount of training data, machine learning models are likely to overfit or converge before actually solving the problem of interest. 
+
+One approach to deal with small datasets is by the use of data augmentation. Data augmentation is the process of generating fake data and add it to the training set. This section will focus on some of the traditional data augmentations techniques used in computer vision, some of these are,
+\begin{itemize}
+    \item Rotation
+    \item Intensity scaling
+    \item Flipping
+    \item Adding noise
+    \item Intensity shifting
+\end{itemize}
+
+
+\subsection{Rotation}
+An image can be rotated using the following mathematically equation
+\begin{equation}
+    \begin{bmatrix} 
+    x^{\ast} \\
+    y^{\ast} 
+    \end{bmatrix} = 
+    \begin{bmatrix} 
+    \text{cos } \theta & \text{sin } \theta \\
+    -\text{sin } \theta & \text{cos } \theta
+    \end{bmatrix}
+        \begin{bmatrix} 
+    x \\
+    y 
+    \end{bmatrix}
+\end{equation}
+where $x^{\ast}$ and $y^{\ast}$ is the coordinates for a pixel after rotating the image $\theta$ grades. It's easy to 
+
+When rotating an image, the shape of the rotated image dependents on  shape 
+
+
+When using rotation as data augmentation technique, is that the dimensionality of the image are identical before and after rotation. Both the potato and avocado images used for this project are $128 \times 128$ pixels. So they can be rotated with $90$, $180$ and $270$ degrees without changing the dimensions,
+
+\begin{figure}[H]
+\centering
+\subcaptionbox{Original image}
+  [.24\textwidth]{\includegraphics[height=3.5cm]{figurer/hollow_15.jpg}}
+\subcaptionbox{Image rotated 90 degrees}
+  [.24\textwidth]{\includegraphics[height=3.5cm]{figurer/hollow_15_90.jpg}}
+\subcaptionbox{Image rotated 180 degrees}
+  [.24\textwidth]{\includegraphics[height=3.5cm]{figurer/hollow_15_180.jpg}}
+\subcaptionbox{Image rotated 270 degrees}
+  [.24\textwidth]{\includegraphics[height=3.5cm]{figurer/hollow_15_270.jpg}}
+ \caption{Rotation for data augmentation}
+ \label{fig:data_augmentation_rotation}
+\end{figure}
+
+\subsection{Intensity scaling}
+
+An image can be transformed using intensity scaling, by multiplying the image with a scalar. The value of the scalar can either be predefined or drawn from a probability distribution. The result of intensity scaling an image is that the pixel values either get closer or further from each other, and visually results in a new contrast in the image,
+\begin{figure}[H]
+\centering
+\subcaptionbox{Original image}
+  [.32\textwidth]{\includegraphics[height=3.5cm]{figurer/hollow_15.jpg}}
+\subcaptionbox{Image multiplied with a scalar of value $1.36337038$ drawn from a gausian distribution with $\mu = 1$ and $\sigma = 0.5$}
+  [.32\textwidth]{\includegraphics[height=3.5cm]{figurer/data_augmentation/scaling1.jpg}}
+\subcaptionbox{Image multiplied with a scalar of value $0.8416078$ drawn from a gausian distribution with $\mu = 1$ and $\sigma = 0.5$}
+  [.32\textwidth]{\includegraphics[height=3.5cm]{figurer/data_augmentation/scaling2.jpg}}
+\end{figure}
+
+
+\subsection{Additive noise}
+
+Additive noise is an augmentation method, where element-wise noise from a probability distribution is added to the image, which mathematically can be expressed as,
+\begin{equation}
+    \vect{I}_{\vect{N}} = \vect{I} + \vect{N}
+\end{equation}
+where $\vect{I}_{\vect{N}}$ is the resulting image after noise matrix $\vect{N}$ is added with image $\vect{I}$. Below an illustration of how an image looks after augmenting using additive noise, where the values of $\vect{N}$ are drawn from a Gaussian distribution $\vect{N} \sim \mathcal{N}(\mu, \sigma^{2})$.
+
+\begin{figure}[H]
+\centering
+\subcaptionbox{Original image}
+  [.32\textwidth]{\includegraphics[height=3.5cm]{figurer/hollow_15.jpg}}
+\subcaptionbox{Image augmented using additive noise drawn from a Gaussian distribution with $\mu = 0.0$ and $\sigma = 3.0$.}
+  [.32\textwidth]{\includegraphics[height=3.5cm]{figurer/data_augmentation/hollow_15_noise0.jpg}}
+\subcaptionbox{Image augmented using additive noise drawn from a Gaussian distribution with $\mu = 0.0$ and $\sigma = 5.0$.}
+  [.32\textwidth]{\includegraphics[height=3.5cm]{figurer/data_augmentation/hollow_15_noise1.jpg}}
+\end{figure}
+
+
+
+\subsection{Intensity Shifting}
+
+Intensity shifting is an augmentation method, where an scalar are added to the image. The value of the scalar can either be predefined or drawn from a probability distribution. The result of intensity shifting an image is that the image either become darker of brighter.
+
+\begin{figure}[H]
+\centering
+\subcaptionbox{Original image}
+  [.32\textwidth]{\includegraphics[height=3.5cm]{figurer/hollow_15.jpg}}
+\subcaptionbox{Image added with a scalar of value $14.55908141$ drawn from a Gaussian distribution with $\mu = 0$ and $\sigma = 10$}
+  [.32\textwidth]{\includegraphics[height=3.5cm]{figurer/data_augmentation/shifting1.jpg}}
+\subcaptionbox{Image added with a scalar of value $-25.88862688$ drawn from a Gaussian distribution with $\mu = 0$ and $\sigma = 10$}
+  [.32\textwidth]{\includegraphics[height=3.5cm]{figurer/data_augmentation/shifting2.jpg}}
+\end{figure}
+
+
+
+\subsubsection{Flipping}
+
+Flipping is a augmentation method, where an image is flipped around its axis. Normally an image are flipped either horizontally, vertically or both horizontally and vertically,
+\begin{equation}
+\begin{split}
+    \text{Horizontal flip}(x, y) &= (\text{width} - x, y) \\
+    \text{Vertical flip}(x, y) &= (x, \text{height} - y) \\
+    \text{Horizontal and vertical flip}(x, y) &= (\text{width} - x, \text{height} - y)
+\end{split}
+\end{equation}
+
+\begin{figure}[H]
+\centering
+\subcaptionbox{Original image}
+  [.24\textwidth]{\includegraphics[height=3.5cm]{figurer/hollow_15.jpg}}
+\subcaptionbox{Image flipped horizontally}
+  [.24\textwidth]{\includegraphics[height=3.5cm]{figurer/data_augmentation/hollow_15_flip1.jpg}}
+\subcaptionbox{Image flipped vertically}
+  [.24\textwidth]{\includegraphics[height=3.5cm]{figurer/data_augmentation/hollow_15_flip2.jpg}}
+\subcaptionbox{Image rotated 270 degrees}
+  [.24\textwidth]{\includegraphics[height=3.5cm]{figurer/data_augmentation/hollow_15_flip3.jpg}}
+ \caption{Image flipped both horizontally and vertically}
+ \label{fig:data_augmentation_flipping}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

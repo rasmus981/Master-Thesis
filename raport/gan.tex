@@ -1,0 +1,21 @@
+\documentclass[11pt]{article}
+\usepackage{mypackages}
+\begin{document}
+
+
+\section{Deep Convolutional Generative Adversarial Networks (GAN)}
+
+Generative adversarial networks is another generative model there will be used in this project to generate new training data. The idea for GAN's is that two models are trained simultaneously by an adversarial process, one model is the Generator, which takes random noise as input and produces fake images. The second model is the Discriminator, which given both real images and fake images as input, tries to figure out how to identify which are real images and which are fake.
+\begin{figure}[!h]\label{conv2}
+    \centering
+    \includegraphics[scale=0.5]{figurer/gan/gan_1.png}
+    \caption{A 2d convolution on an image which produces a \textit{feature} map.}
+    \label{fig:conv}
+\end{figure}
+The loss function for both the Generator and Discrementor are the same, but the generator tries to minimize the error while the discrementor tries to maximize it,
+\begin{equation}
+    V(D, G) = \mathds{E}_{x \sim p_{data}(x)} [\log D(x)] + \mathds{E}_{z \sim p_{z} (z)} [\log (1 - D(G(z)))]
+\end{equation}
+the generator and discriminator networks are playing a min-max zero-sum game. 
+
+\end{document}

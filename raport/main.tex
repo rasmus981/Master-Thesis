@@ -1,0 +1,68 @@
+
+\documentclass[11pt]{article}
+\usepackage{mypackages}
+
+\usepackage{biblatex}
+\addbibresource{citations.bib}
+\begin{document}
+
+\fancypagestyle{main} {%
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+  \fancyfoot[R]{\textit{Page \thepage\  of  \pageref{page_number}}}
+}
+
+%%%%%%% FORSIDE STUFF %%%%%%%%%%
+\AddToShipoutPicture*{\put(0,0){\includegraphics*[viewport=0 0 700 600]{\ColourPDF}}}
+\AddToShipoutPicture*{\put(0,602){\includegraphics*[viewport=0 600 700 1600]{\ColourPDF}}}
+
+\AddToShipoutPicture*{\put(0,0){\includegraphics*{\TitlePDF}}}
+
+\clearpage\maketitle
+\thispagestyle{empty}
+
+
+\newpage
+%%%%%%%%% FORSIDE STUFF SLUT <-- hæhæ luder %%%%%%%%%%%%
+\newpage
+\input{abstract.tex}
+\newpage
+\input{Acknowledgements.tex}
+\newpage
+\input{notations.tex}
+\newpage
+\tableofcontents
+\newpage
+\pagenumbering{arabic}
+\input{Introduction.tex}
+\newpage
+\input{computer_vision.tex}
+\newpage
+\input{data.tex}
+\newpage
+\input{machine_learning.tex}
+\newpage
+\input{deep_learning.tex}
+\newpage
+\input{data_augmentation.tex}
+\newpage
+\input{autoencoders.tex}
+\newpage
+\input{vae.tex}
+\newpage
+\input{gan.tex}
+\newpage
+\input{experiments.tex}
+\newpage
+\input{results.tex}
+%\input{machine_learning.tex}
+
+\printbibliography
+\newpage
+\appendix
+\input{appendix_potato_dataset.tex}
+\newpage
+\input{appendix_avocado_dataset.tex}
+\label{page_number}
+\end{document}

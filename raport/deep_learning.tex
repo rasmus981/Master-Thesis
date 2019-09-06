@@ -1,0 +1,222 @@
+\documentclass[11pt]{article}
+\usepackage{mypackages}
+\begin{document}
+
+
+
+\section{Deep Learning}\label{sec:deep_learning}
+
+Since the convolutional neural network AlexNet won the ImageNet competition in 2012 \cite{Krizhevsky:2012:ICD:2999134.2999257}, the use of deep learning have increased dramatically. Common for all machine learning problems we try to solve in this thesis is that deep learning will be used to solve them. The idea in neural networks is to approximate a function $f^{\ast}(x)$ that minimizing some loss function $L$. To approximate $f^{\ast}(x)$ the network uses a combination of processing layers. Each layer consist of a number neurons, that compute a simple differentiable function $f^{i} : \mathbb{R}^{d} \rightarrow \mathbb{R}^{k}$. By using multiple layers in a network, it is possible to learn abstract functions. Each layer consists of some neurons, which each have a weighted connection to the neurons of the next layer. When training a neural network, the network updates these weighted connection so that network minimize the loss function. This section explains the concepts and mathematics behind deep learning. This section is based on \cite{Goodfellow-et-al-2016}.
+
+
+\subsection{Neurons}
+
+Neurons are the fundamental building block in deep learning. A neuron describes a simple mathematical model that transforms a series of input signals $x_{1}, x_{2}, \cdots, x_{m}$, into a single output signal. Each input signal are sent through a weighted connection $w_{1}, w_{2}, \cdots , w_{m}$ resulting in weighted summation. A bias is added to the weighted sum. So the input $a_{i}$ to a neuron $z_{i}$ is given by,
+\begin{equation}\label{eq:neuron1}
+    a_{i} = \Big(\sum_{j = 1} w_{ij} \cdot z_{j}\Big) + b_{i}
+\end{equation}
+for all neurons $z_{j}$ in the previous layer that have connection to $z_{i}$. To simplify the mathematics the bias $b_{i}$ for neuron $z_{i}$ can be incorporated into the weighted sum by introducing $w_{i0}$ with a fixed value of $z_{0} = 1$, so equation \ref{eq:neuron1} can be rewritten into,
+\begin{equation}
+     a_{i} = \Big(\sum_{j = 1} w_{ij} \cdot z_{j}\Big) + b_{j} = \sum_{j = 0} w_{ij} \cdot z_{j}
+\end{equation}
+After $a_{i}$ is computed it is passed through a non-linear activation function $h$, resulting in the final output $z_{i}$. An intuitive illustration of a neuron is shown at figure \ref{fig:neuron}.
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale = 0.5]{figurer/deep_learning/neuron.png}
+    \caption{Illustration of a neuron}
+    \label{fig:neuron}
+\end{figure}
+
+\subsection{Layers}\label{sec:deep_learning_layers}
+
+One neuron are able to describe a function $f : \mathbb{R}^{d} \rightarrow \mathbb{R}$. To represent functions with a multidimensional output, a layer of neurons can be used. Such a layer are able to represent a function $f : \mathbb{R}^{d} \rightarrow \mathbb{R}^{k}$. These layers can be combined into a network where the output from one layer are the input for the next one. A network of $n$ layers, can be seen as a composition of the functions defined in each layer,
+\begin{equation}\label{eq:layer_functions}
+    f^{\ast}(x) = f^{n}(f^{(n - 1)}(\cdots f^{1}(x) \cdots))
+\end{equation}
+Formally a neural network is structured with an input layer, one or more hidden layers, and an output layer. 
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale = 0.4]{figurer/deep_learning/neural_net.png}
+    \caption{Neural network that contains one input layer of 3 neuron, a hidden layer of 4 neurons and a output layer of 3 neurons}
+    \label{fig:deep_learning_layers}
+\end{figure}
+Intuitively we can see each layer, as a function that tries to extract relevant features from its input. As mentioned earlier all neurons uses an activation function $h : \mathbb{R}^{d} \rightarrow \mathbb{R}$ to highlight or dampen these features. All neurons in a network don't have to use the same activation function, but most often are all neurons in a layer using the same activation function. There exists a number of activation functions, which to use, depends on the problem the network has to solve. I will not cover all activation function, but those used in this project.
+\\ \\
+\textbf{Softmax}
+\\ \\
+In classification problems, we want to output a probability distribution. This can be emulated by using the softmax activation function for the output layer. The softmax function is defined as
+\begin{equation}
+    \text{softmax}(z)_{i} = \frac{e^{z_{i}}}{\sum_{j = 1}^{C} e^{z_{j}}}
+\end{equation}
+where $C$ is the number of classes in our classification problem. The softmax function is a generalization of the sigmoid function, 
+\begin{equation}
+    \text{sigmoid}(x) = \frac{1}{1 + e^{- x}}
+\end{equation}
+which are illustrated at figure \ref{fig:sigmoid},
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale = 0.3]{figurer/deep_learning/sigmoid.png}
+    \caption{Plot of the sigmoid function}
+    \label{fig:sigmoid}
+\end{figure}
+\\ \\
+\textbf{Rectified Linear Unit (ReLU)}
+\\ \\
+The main problem of the sigmoid function from figure \ref{fig:sigmoid} is the vanishing gradient problem. The vanishing gradient problem is that the gradient of the loss diminishes when it is backpropagated through the network under training. The ReLU preventing this by its piecewise linear, non-saturating nature. Furthermore the ReLU is efficient to compute since it just thresholding the weighted input at zero, and when training the network it is again efficient to determine the gradient since it is either 0 and 1. The ReLU function and defined as,
+\begin{equation}
+    \text{ReLU}(x) = \max(0, x)
+\end{equation}
+which are illustrated in \ref{fig:relu}.
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale = 0.33]{figurer/deep_learning/relu.png}
+    \caption{Plot of the ReLU function}
+    \label{fig:relu}
+\end{figure}
+\\ \\
+\textbf{LeakyReLU}
+\\ \\
+One problem with the ReLU function, are if the neuron is stuck in the negative side and always outputs 0. Since the gradient flowing through the unit are 0 as well, it's unlikely that the neuron will recover and output positive number ever again. Such a neuron no longer influence the model, and are unfortunately useless. One way to overcome the problem of "dead" neurons, and still maintain the advantages that the ReLU provides is by using the LeakyReLU activation function \ref{fig:deep_learning_leaky_relu}, defined as
+\begin{equation}
+    \text{LeakyReLU}(x, \alpha) = \max(x \cdot \alpha, x)
+\end{equation}
+and illustrated at figure \ref{fig:deep_learning_leaky_relu}
+with $\alpha = 0.2$.
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale = 0.28]{figurer/deep_learning/leaky_relu.png}
+    \caption{Plot of the Leaky ReLU function with $\alpha = 0.2$}
+    \label{fig:deep_learning_leaky_relu}
+\end{figure}
+
+
+
+\subsection{Convolutional Neural Network (CNN)}
+
+Convolutional neural networks (CNN) are a type of neural network that has shown excellent results in computer vision \cite{cnn_results}. In addition to the neural networks discussed earlier, CNN also
+contains some convolutional layers.  In addition to the layers discussed in section \ref{sec:deep_learning_layers}, a convolutional layer also performs a convolution and a pooling of the input.  In section \ref{sec:deep_learning_layers}, we mentioned that each neuron in a layer have a weighted connection to each neuron in the subsequent layer. For a convolutional layer, the neurons share a kernel of weights $K$, which can be represented as a $d \times k$ dimensional matrix.
+$$
+K =
+\begin{bmatrix}
+    w_{1,1 } & w_{1, 2} & \hdots & w_{1, k} \\
+    w_{2,1 } & w_{2, 2} & \hdots & w_{2, k} \\
+    \vdots   &          & \ddots &          \\
+    w_{d,1 } & w_{d, 2} & \hdots & w_{d, k} \\
+\end{bmatrix}
+$$
+In a convolutional layer, the convolutional works in the same manner as discussed in section \ref{sec:computer_vision_convolution}. So when performing a 2D convolution with image $I$ and a filter kernel $K$, a new image is produced. In the context of CNN's, this new image is called a feature map. Because the spatial structure in images, make it possible to extract features from the image when performing a convolution.
+\\ \\
+Each element in the resulting feature map describes the weighted sum of its neighboring pixels. Thereby it is possible to reduce the dimensionality without losing as much information about the image, as if we have reduced the dimensionality before performing the convolution. The dimensionalty reduction is called a pooling, and attempts to retain as much information as possible, from the feature map. A standard pooling scheme is max-pooling, that takes a filter (generally of size $2 \times 2$), and stride it over image, and outputs the maximum number of every pooled subregion.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=10cm]{figurer/deep_learning/max_pooling.png}
+    \caption{Max-pooling performed on an image.}
+    \label{fig:deep_learning_max_pooling}
+\end{figure}
+\\ \\
+Instead of performing the convolution and pooling operation in two separate steps, convolutions with stride is often used instead. The stride parameter determines the movement of the kernel filter, so using stride $n$, results in that kernel filter skips $n$ elements between each convolution performed. Here is an example of a convolution with stride in 1-dimension, with the stride parameter equals 2 and a kernel of size 3.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=10cm]{figurer/deep_learning/strides.png}
+    \caption{A convolution in one dimension, using a stride of 2. Which reduce the size of the input with a factor 2, since the convolution is skipping every second element.}
+    \label{fig:deep_learning_strides}
+\end{figure}
+In two dimensions a convolution with stride, can be seen as a kernel moving across the image, where the stride parameter determine the number of pixels the filter is moved. The dimensionalty of an image can be halved, using a stride of (2, 2). When using pooling we usually use either max or average pooling, convolutional with stride emulates average pooling, since the convolution is seen as a weighted sum of neighbouring pixels.
+
+
+\subsection{Training a neural network}
+Up until now, we have focused on the forward propagation in neural networks. This section will cover how the weights in a neural network are updated when training, using backpropagation.
+
+\subsubsection{Loss function}\label{sec:loss_function}
+When training a neural network, the goal is to find the weight and biases such that the network can predict $y$ given input $x$. To determine how well the network is doing, a loss function is used $L(X, Y, \theta)$, where $X$ is the data used to compute the loss, $Y$ is the labels, and $\theta$ is the network parameters (weights and biases). There exits many loss function, and it is often problem-specific which to use. We are only going to cover the loss function used for this project.
+\\ \\
+\textbf{Mean Absolute Error (MAE)}
+\\
+Mean absolute error computes the mean absolute difference, between the predicted label $\hat{y_{i}}$ when forward propagating datapoint $x_{i}$ trough a network parameter $(\theta)$, and the true label $y_{i}$,
+\begin{equation}
+    L(X, Y, \theta) = \frac{1}{N} \sum_{i = 1}^{N} || \hat{y_{i}} - y_{i} ||
+\end{equation}
+where $N$ is the number of datapoints.
+\\ \\
+\textbf{Binary cross-entropy}
+\\ \\
+Binary cross-entropy is used when the neural network has to solve a binary classification task. Binary cross entropy computes the negative log-likelihood between the empirical distribution $y_{i}$ and the predicted probability distribution $\hat{y}_{i}$
+\begin{equation}
+    L(X, Y, \theta) = - \sum_{i = 0}^{N} -(y_{i} \log(\hat{y_{i}}) + (1 - y_{i}) \log (1 - \hat{y_{i}}) 
+\end{equation}
+
+
+
+\textbf{Sparse categorical cross-entropy}
+\\ \\
+Categorical cross-entropy is used when the neural network has to solve a classification problem with more than two classes. Categorical cross-entropy computes the negative log-likelihood between empirical distribution $y_{i}$ and the predicted probability distribution $\hat{y}_{i}$
+\begin{equation}
+    L(X, Y, \theta) = - \sum_{i = 0}^{N} \sum_{j = 0}^{C} (y_{ic} \cdot \log (\hat{y}_{ic}))
+\end{equation}
+\\ \\
+The last loss function used for this project is the VAE loss, and are used for variational autoencoders. This loss function is more complicated than thoses presente her, and will first be discussed in section \ref{sec:generative_models_vae}.
+
+
+\subsubsection{Backpropgation}
+The goal when training a neural network is to minimize the loss-function $L(X, Y, \theta)$ with respect to the parameters $\theta$. To minimize the loss function gradient decent or alternative optimization scheme is used. Unfortunately, it is difficult to compute the gradient of the entire network at once, since it consists of several layers using different activation functions. To calculate the gradient for each neuron in each layer, backpropagation is used.
+\\ \\
+Consider a network that have $d$ input neurons, $m$ hidden neurons and $k$ output neurons, the network estimates a function $f : \mathbb{R}^{d} \rightarrow \mathbb{R}^{k}$. Lets denote each neuron $z_{i}$, where neurons for which $i \leq d$ are input neurons, $d < i \leq m + d$ are hidden neurons and $m + d < i \leq m + d + k$ are output neurons. All neurons in the hidden and output layers can be seen as a weighted activation of its input $z_{i} = h(a_{i}$, where $h$ is an arbitrary activation function. We want to find the directional changes for all weights in the network in regards to the loss function. Because the activation functions $h$ used in this project is differentiable this results in the partial derivative,
+\begin{equation}\label{eq:backprop1}
+    \frac{\partial L(X, \theta)}{\partial w_{ij}}
+\end{equation}
+where $L(X, \theta)$ is the computed loos on data $X$ with weights and biases $\theta$ and describe the directional change for each weighted connection in the network from $a_{j}$ to $a_{i}$. For simplicity lets only look at the loss for one input-output pair, so equation \ref{eq:backprop1} can be rewritten into,
+\begin{equation}\label{eq:backprop2}
+    \frac{\partial L}{\partial w_{ij}}
+\end{equation}
+
+First step of the backpropagation algorithm is to look at partial derivative for the $k$ output neurons. We start with applying the chain rule to the partial derivative from equation \ref{eq:backprop2},
+\begin{equation}\label{eq:backprop3}
+    \frac{\partial L}{w_{ij}} = \frac{\partial L}{\partial a_{i}} \frac{\partial a_{i}}{\partial w_{ij}}
+\end{equation}
+since $w_{ij}$ is part of $a_{i}$. Lets denote $\frac{\partial E}{\partial a_{i}}$ as $\delta_{i}$. Furthermore we have that $\frac{\partial a_{i}}{\partial w_{ij}} = z_{j}$ since $\frac{\partial a_{i}}{\partial w_{ij}} = \frac{\partial}{\partial w_{ij}} \sum_{d} w_{id} \cdot z_{d} = z_{j}$, which means,
+\begin{equation}
+    \frac{\partial E}{\partial w_{ij}} = \delta \cdot z_{j}
+\end{equation}
+For each output neurons, $\delta_{i}$ can be found as,
+\begin{equation}
+\begin{split}
+    \delta_{i} &= \frac{\partial E}{\partial a_{i}} \\
+    &= \frac{\partial E}{\partial z_{i}} \frac{\partial z_{i}}{\partial a_{i}} \\
+    &= h'(a_{i}) \frac{\partial E}{\partial z_{i}}
+\end{split}
+\end{equation}
+since $\frac{\partial z_{i}}{\partial a_{i}} = \frac{\partial}{\partial a_{i}} h(a_{i}) = h'(a_{i})$. So the partial derivative of the loss function with respect to a weight for an output neuron can be expressed as,
+\begin{equation} \label{eq:backprop4}
+    \frac{\partial E}{\partial w_{ij}} = h'(a_{i}) \frac{\partial E}{\partial z_{i}} \cdot z_{j}
+\end{equation}
+So equation \ref{eq:backprop4} only works for the output neurons, since their output is not used by other neurons. For the hidden neurons, we have to take all subsequent neurons into account, since their output is propagated forward through the network. Thus,
+\begin{equation}
+    \delta_{i} = \sum_{j = i + 1}^{m + d + k} \frac{\partial E}{\partial a_{j}} \frac{\partial a_{j}}{\partial a_{i}}
+\end{equation}
+for all hidden neurons $z_{i}$, for which $d > i \leq m + d + k$. Since $\frac{\partial E}{\partial a_{j}} = \delta_{j}$ and $\frac{\partial a_{j}}{\partial a_{i}} = \frac{\partial a_{j}}{\partial z_{i}} \frac{\partial z_{i}}{\partial a_{i}}$. We can then derive $\delta_{i}$ as,
+\begin{equation} \label{eq:backprop5}
+\begin{split}
+    \delta_{i} &= \sum_{j = i + 1}^{m + d + k} \delta_{j} \frac{\partial a_{j}}{\partial z_{i}} \frac{\partial z_{i}}{\partial a_{i}} \\
+    &= \sum_{j = i + 1}^{m + d + k} \delta_{j} \cdot w_{ji} \cdot h'(a_{i}) \\
+    &= h'(a_{i}) \sum_{j = i + 1}^{m + d + k} \delta_{j} \cdot w_{ji}
+\end{split}
+\end{equation}
+because $\frac{\partial a_{j}}{\partial z_{i}} = \frac{\partial}{\partial z_{i}} \sum_{l} w_{jl} \cdot z_{l} = w_{ji}$. Using equation \ref{eq:backprop4} and \ref{eq:backprop5} we can compute the partial derivatives for all output and hidden neurons, only by computing $\delta_{i}$, since we know $z_{j}$. However it is important that the derivatives are computed in reverse order, since the derivative for a neuron $z_{j}$, dependents of the derivatives for all later neurons $z_{i}$ for $j < i$.
+
+\subsection{Early stopping}
+
+Neural network models often have a high capacity. It is typically that the training loss decreases trough training steadily, while the test loss decreases at the start, and rises again later, which means that the model starts overfitting. Optimally we want to stop training the network, before the overfitting harms the test error. Early stopping is a technique to stop training when the model begins overfitting. In this project, we keep track of the test loss. When the model achieves a new minimum test loss, the model has some epochs to improve the test loss, or the model stops training.
+\\ \\
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=10cm]{figurer/deep_learning/early_stopping.png}
+    \caption{Illustration of how early stopping can be used to strop training, before overfitting have negative impact of the models ability to generalize}
+    \label{fig:deep_learning_early_stopping}
+\end{figure}
+\\ \\
+When using early stopping, we can use either the model parameters when the model achieved the minimum test error, or the parameters of the model when the training is stopped. The problem with using the parameters that achieved the best test error, is that we have to save the parameters each time a new minimum test error is found, which are time-consuming. In this project, we use the model parameters that the network had when training stopped.
+
+
+\end{document}

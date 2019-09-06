@@ -1,0 +1,40 @@
+\documentclass[11pt]{article}
+\usepackage{mypackages}
+\begin{document}
+
+
+
+\section{Introduction}\label{sec:introduction}
+
+The purpose of this thesis is to generate realistic artificial x-ray images of highly homogeneous
+food items, to use these fake images to improve the performance
+of machine learning models trained on small datasets.  In machine learning, the process
+of generating new data points to expand the size of the training dataset is called data
+augmentation. Both simple and advanced data augmentation techniques will be applied
+in this project. I think the topics discussed trough out this thesis are exciting both from a
+practical and theoretical point of view. This report covers the simple and advanced concepts
+in computer vision and deep learning, necessary to understand how deep generative models
+works and how they can be used for data augmentation.  The idea with this report is, 
+regardless of the reader's academic level, it should be easy to follow the topics discussed. Only a basic understanding of calculus, probability theory and machine learning are expected, which an
+introduction course in each subject should provide
+
+
+\subsection{Motivation}
+
+Machine learning (ML) methods currently revolutionize many sectors in the world, especially deep learning (DL) have made unprecedented performance on several tasks, like
+image classification \cite{Krizhevsky:2012:ICD:2999134.2999257}, object detection \cite{Ren:2015:FRT:2969239.2969250} and mastering real-time strategy games like Star Craft 2 \cite{alphastarblog}.  However, to obtain these fantastic results, large datasets have been utilized. In
+practice, there are no guarantees that such datasets are available for a given task. In those
+situations, deep neural networks seem to fall short, by overfitting on the training set, which
+results in poor generalization on the test set. 
+One method to deal with small datasets is to use data augmentation. Data augmentation is the process of generating new additional training samples, only by using the original training set. The typical way of doing data augmentation for computer vision problems, is by applying simple image transformation like rotation, flipping, and adding noise. Another approach to data augmentation is to use generative models.  Generative models are models that try to learn the underlying probability distribution of a dataset to create new samples.
+A number of articles have shown that \textit{generative adversarial networks} can improve performance when small datasets is used \cite{antoniou2018data} \cite{gan_works}. In this thesis, we are going to compare the effect of applying traditional data augmentation techniques with two types of generative models, deep convolutional generative adversarial networks (DCGAN) and variational autoencoders (VAE).
+
+This thesis focus on data augmentation methods in the context of computer vision problems. The first problem we will look at is an image classification task. Image classification is the problem of predicting which of $k$ categories an image belongs to. For this task, a dataset of x-ray scanned potatoes are utilized. Each potato image belongs to one of these categories, normal potatoes, potatoes with metal needles in it and potatoes with hollow heart.
+\\
+The second problem discussed, is a \textit{regression} task. Image regression is the problem of predicting a numerical value given an image. The particular image regression problem that will be discussed in this thesis is the problem of estimating the size of avocado stones, using x-ray images of avocados.
+
+\subsection{Outline}
+
+This thesis is structured as continuous report, where section \ref{sec:comuter_vision}, \ref{sec:machine_learning}, \ref{sec:deep_learning} build the fundamental theoretical understanding of computer vision, machine learning and deep learning necessary to understand the topics discussed later on. Section \ref{sec:generative_models} dive into the topic of generative models which will be used to augment data. In section \ref{sec:data_augmentation} we will discuss simple data augmentation techniques like rotating and scaling image data, then we look into two types of deep generative models namely variational autoencoders and generative generative adversarial networks.
+
+\end{document}

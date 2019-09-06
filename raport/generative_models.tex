@@ -1,0 +1,161 @@
+\documentclass[11pt]{article}
+\usepackage{mypackages}
+\begin{document}
+
+
+
+\section{Generative models}\label{sec:generative_models}
+
+The data augmentation methods discussed in section \ref{sec:data_augmentation} are techniques that are used quiet often in machine learning. An rising field in data augmentation, is to use generative models to generate artificial data, when using generative models, for data augmentation we want the model to output data which are similar to the training data, but at the same time provides new data that which explore variations of the training data available.
+In this project variational autoencoders (VAE) and deep convolutional generative adversarial networks (DCGAN) will be used for data augmentation. This section provides the intuition and theory these generative models.
+
+\subsection{Variantional autoencoders}\label{sec:generative_models_vae}
+
+Variational autoencoders are an generative model that originated from autoencoders. Autoencoders are an unsupervised learning model, where a pair of two connected networks, an encoder and a decoder. The encoder takes in an input, and covert it into a smaller dimensional reprsentation, which the decoder network takes as input and tries to recreate the original input.
+
+An autoencoder network is actually a pair of two connected networks, an encoder and a decoder. An encoder network takes in an input, and converts it into a smaller, dense representation, which the decoder network can use to convert it back to the original input.
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=1.0\textwidth]{figurer/autoencoder.png}
+    \caption{Autoencoder}
+    \label{fig:autoencoder}
+\end{figure}
+at figure \ref{fig:autoencoder} we see that an autoencoder encode its input into fixed dimensionalty. The output from the encoder is called the latent space representation which are used as input to the decoder which task is recreate the original input. The latent space is a compressed knowledge representation of the original input. If all the input features was independent from one another, the compression and subsequent reconstruction would be a very difficult task. However, if there exits some structure between the feature in the data, an autoencoder tries to learn this structure.
+\\ \\
+An autoencoder are able to create artificial data, that are close to identical with the training data. For the purpose of data augmentation, we of course want the generated data to be similar to the training data, but at the same time generate data that explore variations of the training data available, for this variantional autoencoder (VAE) can be utilized. 
+\\ \\
+To understand how a VAE works, let's start focusing on how the latent space looks like for an normal autoencoder. So the latent space is a compressed representation of the original input that consists of a number of latent variables, which are descriptive attributes used to decode the compressed representation. Suppose
+that an autoenoceder have been trained on the potato images with hollow heart from the potato dataset. And that the latent space representation consists of 5 attributes, optimally the autoencoder would learn descriptive attributes like, the height and width of the potato, the size of the hollow heart etc. So that the decoder have an realistic attempt to reconstruct the image,
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.25]{figurer/vae/vae_intution.png}
+    \caption{Autoencoder}
+    \label{fig:generative_models_vae_intution}
+\end{figure}
+So each latent variable is represented by a single value to describe each attribute. For VAE's each latent variable is a probability distribution, and the input for the decoding network, are then a random sample from each latent variable distribution.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.25]{figurer/vae/vae_intu3.png}
+    \caption{Autoencoder}
+    \label{fig:generative_models_vae_intution_3}
+\end{figure}
+
+So by using VAE's it should be possible to generate variations of the training data available. Now we gonna focus on the mathematics behind VAE's, which definitely are the most mathematical toughest section in this thesis.
+
+\subsubsection{Probability perspective of VAE}
+
+From a probabilistic point of view, a variational autoencoder is a model that tries to generate data $x$, using a hidden latent variables $z$. 
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.45]{figurer/vae/vae_1.png}
+    \caption{Autoencoder}
+    \label{fig:vae_math1}
+\end{figure}
+The latent variable $z$ are drawn from a prior probability distribution (prior) $p(z)$, and $x$ are generated from conditional distribution $p(x | z)$. We are only able to see the value of $x$, and we want to find good values of the latent variables $z$ given $x$,
+\\
+\begin{equation}\label{eq:vae_1}
+    p(z | x) = \frac{p(x | z) p(z)}{p(x)}
+\end{equation}
+\\
+to compute equation \ref{eq:vae_1}, we have to figure out the value of $p(x)$, which are defined as,
+\\
+\begin{equation}\label{eq:vae_2}
+    p(x) = \int p(x | z) p(z) dz
+\end{equation}
+\\
+the problem with equation \ref{eq:vae_2} are that the integral requires exponential time to compute, since we have to compute all configurations of the latent variables $z$. So instead of computing the posterior distribution $p(z | x)$, we can try to approximate it using another distribution $q_{\lambda} (z | x)$, where $\lambda$ indicating which kind of distributions we want to approximate. So if $q$ is an Gaussian distribution, the latent variables for a datapoint is defined by a mean and variance $\lambda_{x_i} = (\mu_{x_i}, \sigma^{2}_{x_i})$.
+\\ \\
+So lets catch up before we go any further, we want to find the best values for our latent variables $z$, but we can't directly compute the posterior distribution $p(z | x)$, so we try to approximate it using $q_{\lambda}(z | x)$.
+\\ \\
+To determine how $q(z | x)$ approximates the true posterior $p(z | x)$ the Kullback-Leibler divergence are used. By using Kulback-Leiber divergence it is posible to measure of how much information that are lost when using a $q(z | x)$ to approximate $p(z | x)$.
+\\
+\begin{equation}\label{eq:vae_3}
+    \mathbb{KL}(q_\lambda(z \mid x) \mid \mid p(z \mid x)) = \mathds{E}_{q_{\lamdba}}[\log q_{\lamdba} (z | x)] - \mathds{E}_{q}[\log p(x, z)] + \log p(x)
+\end{equation}
+\\
+the optimal $q_{\lamdba}^{\ast}(z | x)$ must therefore be one for which $\lamdba$ minimize the KL-divergence.
+\\
+\begin{equation}\label{eq:vae_4}
+    q^{\ast}_{\lambda}(z | x) = \argmin_{\lambda} \mathbb{KL}(q_{\lambda} (z | x) || p(z | x))
+\end{equation}
+it is still to compute $q^{\ast}_{\lambda}(z | x)$ directly, since equation \ref{eq:vae_3} make use of $p(x)$ which takes exponential time to compute. To overcome this problem, the Evidence Lower BOund (ELBO) will be used,
+\\
+\begin{equation}\label{eq:vae_5}
+    \text{ELBO}(\lambda) = \mathds{E}_{q}[\log p(x, z)] - \mathds{E}[\log q_{\lambda} (z | x)]
+\end{equation}
+\\ 
+Which can be combined with equation \ref{eq:vae_5},
+\begin{equation}
+\begin{split}
+    \text{ELBO}(\lambda) + \mathbb{KL}(q_{\lambda} (z | x) || p(z | x)) &= \mathds{E}_{q}[\log p(x, z)] - \mathds{E}[\log q_{\lambda} (z | x)] + \mathds{E}_{q_{\lamdba}}[\log q_{\lamdba} (z | x)] - \mathds{E}_{q}[\log p(x, z)] + \log p(x) \\
+    &= \log p(x)
+\end{split}
+\end{equation}
+\\
+From Jensen's inequality REFERENCE we have that the Kullback-Leibler divergence always are greater than or equal to zero. So minimizing the Kullback-Leibler divergence is equivalent to maximizing the ELBO, which make it possible to approximate the posterior without computing $p(x)$. A variational autoencoder the variational parameter $\lambda$ is shared between all datapoits, but the latent variable $z$ for one datapoint are independent from the latent variable for another datapoint. So therefore it possible to decompose the ELBO for $X$ into a sum, where each term depends on a single $x$,
+\begin{equation}\label{eq:vae_6}
+    \text{ELBO}_{i}(\lambda) = \mathds{E}_{q_{\lambda}}(z | x_{i}) [\log p(x_{i} | z)] - \mathbb{KL}(q_{\lambda} (z | x_{i}) || p(z))
+\end{equation}
+\\
+Now lets discuss how to get this probaility model of a VAE into an actual neural network. So a VAE consits of two networks, an encoder and a decoder. The encoder parametrize the approximatation of the posterior distribution $q_{\theta_{e}} (z | x)$. While the decoder parametrize the likelihood $p_{\theta_{d}}(x \mid z)p(x∣z)$. $\theta_{e}$ and $\theta_{d}$ correspond to the weights and biases it the encoder and decoder network. We can rewrite equation \ref{eq:vae_6}, so it uses the parameters of $\theta_{e}$ and $\theta_{d}$,
+\begin{equation}\label{eq:vae_7}
+    \text{ELBO}_{i}(\lambda) = \mathds{E}_{q_{\theta_{e}}}(z | x_{i}) [\log p_{\theta_{d}}(x_{i} | z)] - \mathbb{KL}(q_{\theta_{e}} (z | x_{i}) || p(z))
+\end{equation}
+\\ \\
+where the first term $\mathds{E}_{q_{\theta_{e}}}(z | x_{i}) [\log p_{\theta_{d}}(x_{i} | z)]$ can be seen represents the reconstruction likelihood, and the second term $\mathbb{KL}(q_{\theta_{e}} (z | x_{i}) || p(z))$ ensures that the learned distribution $q$ are similar to the true prior distribution $p$, and the optimal parameters can be found by maximize the ELBO using some optimazation scheme like stochastic gradient descent.
+
+\subsubsection{Implementation problems}
+
+As mentioned in section \ref{sec:generative_models_vae} the encoder in a standard autoencoder directly output values for the latent space, while the encoder for a VAE outputs parameters that describe the distribution for each dimension in the latent space. In this project we assume that the prior follows a Gaussian distribution. So instead of outputting values for the latent state, we output two vectors describing the mean and variance respectively.
+\\ \\
+The decoder will then generate a latent vector by sampling from the distribution and proceed to develop a reconstruction of the original input.
+\\ \\
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.35]{figurer/vae/vae_network.png}
+    \caption{Autoencoder}
+    \label{fig:generative_models_vae_implementation}
+\end{figure}
+\\ \\
+But we have a problem here, we can't use backpropagation to update the network, because of the randomness in the sampling process, and the network have to know the relationship between the weights of the network and the loss computed.  Fortunately, we can use the "reparameterization trick" REF, where we randomly sample a $\epsilon$ from a unit Gaussian and then shift the randomly samples $\epsilon$ by the latent distribtuin's mean $\mu$ and scale it by the latent distribution's variance $\sigma$
+
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.35]{figurer/vae/rep_trick.png}
+    \caption{Autoencoder}
+    \label{fig:generative_models_rep_trick}
+\end{figure}
+
+
+
+
+\subsection{Deep convolutional generative adversarial networks (DCGAN)}
+
+There are an cool party going on at the university, and you really want to attend, but you need a ticket, which are sold out. The party organizers have hired a security guard, with specialty in ticket forgery. The only way to get through the guard is by showing the guard a very convincing fake ticket. But you don't have any clue of how these tickets looks like, so you use your creativity to design a ticket, go up to the guard show him the ticket. If the guard denies you, you go home design a new ticket, based on the response from the guard. After you designing a new ticket, you try to get through the guard again, this process keeps repeating until you pass the guard and attend the party. This are are pretty much how Generative Adversarial Networks (GANs) works.
+\\ \\
+GANs was invented by Ian Goodfellow REFERENCE in ÅRSRAL. The idea in a GAN is that two neural networks are trained simultaneously by an adversarial process, the first network are the generator, which takes a random noise vector as input and produces fake data. The second network is the discriminator which are feeded both real and fake data, the goal for the discriminator is to classify whether a datapoint are real or fake.
+\\ \\
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{figurer/gan/gan_1.png}
+    \caption{A 2d convolution on an image which produces a \textit{feature} map.}
+    \label{fig:conv}
+\end{figure}
+The loss function for both the Generator and discrementor are binary cross-entropy discussed in section REFERENCE, but the generator tries to minimize the error while the discriminator tries to maximize it,
+\begin{equation}
+    V(D, G) = \mathds{E}_{x \sim p_{data}(x)} [\log D(x)] + \mathds{E}_{z \sim p_{z} (z)} [\log (1 - D(G(z)))]
+\end{equation}
+so the generator and discriminator networks are playing a min-max zero-sum game.
+\\ \\
+In 2015 DCGAN was invented by https://arxiv.org/abs/1511.06434. DCGANs are simmilar to GANs, besides both the generator and discriminator are a convoloutional neural network. The loss function are the same as for a standard GAN.
+
+
+
+
+
+\end{document}
+
+
+

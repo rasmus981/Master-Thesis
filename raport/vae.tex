@@ -1,0 +1,138 @@
+\documentclass[11pt]{article}
+\usepackage{mypackages}
+\begin{document}
+
+
+\section{Variational Autoencoder (VAE)}
+
+Variational autoencoders is one of the methods we will use in this thesis to create fake training data. A variational autoencoder is an generative models, that uses a probabilistic manner to describe an observation in latent space. Thus, the latent space for a Variational autoencoder consits of a probability distribution for each latent variable. This section starts with the intuation about Variational autoencoders, and the last part cover the math for how they work.
+
+\subsection{Intuition}
+
+To understand Variational Autoencoder, let's start discussing how the latent space for an standard autoencoder could look like. As mentied in section REF the latent space representation is a compressed representation of the original input that consits of a number of latetent variables which are descriptive attributes used to decode the compressed representation to the original input. If we take a closer look at figure REF, and lets say that the latent space consist of 5 latent variables, one way the latent variables could look like this,
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.25]{figurer/vae/vae_intution.png}
+    \caption{Autoencoder}
+    \label{fig:vae}
+\end{figure}
+
+At figure \ref{fig:vae} all the latent variables using a single value to describe each attribute. In variational autoencoders, we describe latent attributes as probability distribution. 
+
+
+DRAW FIGURE
+
+When decoding the latent space reprsentation using the approach from figure REF, we randomly sample each latent variable from the encoded distribution, the generated vector of latent variables is then used for input for the decoder. Using this intuition it should be possible to create new data which can be used to train a machine learning model.
+
+
+\subsection{Probability perspective of VAE}
+
+From a probabilistic point of view, a variational autoencoder contains some probability model of data $x$ and latent variables $z$. The joint probability of the model can be written as,
+\begin{equation}\label{eq:vae_1}
+    p(x, z) = p(x \mid z) p(z).
+\end{equation}
+where the latent variable $z$ are drawn from a prior $p(z)$ and the data $x$ have a likelihood,
+\begin{equation}
+    p(x \mid z)p(x∣z) 
+\end{equation}
+that is conditioned on latent variables $z$. So for each datapoint $i$, we draw a latent variable variables $z_i \sim p(z)$ and a datatpoint $x_i \sim p(x\mid z)$, which can be illustrated as,
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.45]{figurer/vae/vae_1.png}
+    \caption{Autoencoder}
+    \label{fig:vae}
+\end{figure}
+The goal is now to derive some good values for the latent variables $z$ given training data. The optimal way infer good values for the latent variables would be to compute the posterior,
+\begin{equation}
+    p(z | x) = \frac{p(x | z) p(z)}{p(x)}
+\end{equation}
+so compared to equation \ref{eq:vae_1} we also have to compute the term $p(x)$, which can be computed as,
+\begin{equation}\label{eq:vae_2}
+    p(x) = \int p(x | z) p(z) dz
+\end{equation}
+Unfortunately, the integral at equation \ref{eq:vae_2} requires exponential time to compute, because we have to evaluate all configurations of latent variables, so instead lets try to approximate the posterior. The variational inference can be approximated using another distribution,
+\begin{equation}
+    q \lambda (z | x)
+\end{equation}
+where $\lamdba$ indicating which family of distributions we want to approximate, so lets say $q$ where an Gaussian distribution we want to approximate the latent variables for each datapoint would be the mean and variance $\lambda_{x_i} = (\mu_{x_i}, \sigma^{2}_{x_i})$.
+\\ \\
+To tell how well the posterior $q(z \mid x)q(z∣x)$ approximates the true posterior $p(z \mid x)p(z∣x)$, we use the Kullback-Leiber divergence, which are a measure of how one probability distribution is different from a second probability distribution. In this case we use the Kullback-Leiber divergence to compute how much information that are lost when using $q$ to approximate $p$,
+\begin{equation}\label{eq:vae_2}
+    \mathbb{KL}(q_\lambda(z \mid x) \mid \mid p(z \mid x)) = \mathds{E}_{q_{\lamdba}}[\log q_{\lamdba} (z | x)] - \mathds{E}_{q}[\log p(x, z)] + \log p(x)
+\end{equation}
+and we want to find the parameters of $\lambda$ that minimize this divergence,
+\begin{equation}
+    q^{\ast}_{\lambda}(z | x) = \argmin_{\lambda} \mathbb{KL}(q_{\lambda} (z | x) || p(z | x))
+\end{equation}
+but unfortunately it is impossible to compute $q^{\ast}_{\lambda}(z | x)$ directly, cause equation \ref{eq:vae_2} use $p(x)$ which as mentioned earlier takes exponential time to compute. For solving this problem, we will be using the Evidence Lower BOund (ELBO),
+\begin{equation}
+    \text{ELBO}(\lambda) = \mathds{E}_{q}[\log p(x, z)] - \mathds{E}[\log q_{\lambda} (z | x)]
+\end{equation}
+which we can simply combine with  Kullback-Leibler divergence,
+\begin{equation}
+\begin{split}
+    \text{ELBO}(\lambda) + \mathbb{KL}(q_{\lambda} (z | x) || p(z | x)) &= \mathds{E}_{q}[\log p(x, z)] - \mathds{E}[\log q_{\lambda} (z | x)] + \mathds{E}_{q_{\lamdba}}[\log q_{\lamdba} (z | x)] - \mathds{E}_{q}[\log p(x, z)] + \log p(x) \\
+    &= \log p(x)
+\end{split}
+\end{equation}
+From Jensen's inequality we know that Kullback-Leibler divergence always are greater than or equal to zero. Therefore minimizing the Kullback-Leibler divergence is equivalent to maximizing the ELBO. So now we can approximate the posterior without computing $p(x)$. 
+\\ \\
+For variatinal autoencoders, there exists only local latent variables, which mean to datapoint shares the same laten varaible $z$. So by decomposing the ELBO into a sum where each term in the sum depends on the latent variable for one datapoint, the elbo for one datapoint is defined as,
+\begin{equation}\label{eq:vae_3}
+    \text{ELBO}_{i}(\lambda) = \mathds{E}_{q_{\lambda}}(z | x_{i}) [\log p(x_{i} | z)] - \mathbb{KL}(q_{\lambda} (z | x_{i}) || p(z))
+\end{equation}
+which makes it possible to use stochastic gradient descent with respect to $\lambda$, for finding the optmial parameters.
+\\ \\
+In the varitonal autoencoder, we have the encoder which tries to approximate the posterior $q_{\theta}(z | x, \lambda)$ and the decoder that tries output the data distribution $p_\phi(x | z)$. The encoder have parameter $\theta$ and the encoder have parameter $\phi$ which correspond to the wightss and biases in the neural network. To optimize the network we tries to maximize the ELBO using stochastic gradient descent. The ELBO equation from equation \ref{eq:vae_3}, can be rewritten so it uses $\theta$ and $\phi$,
+\begin{equation}\label{eq:vae_3}
+    \text{ELBO}_{i}(\theta, \phi) = \mathds{E}_{q_{\theta}}(z | x_{i}) [\log p_\phi(x_{i} | z)] - \mathbb{KL}(q_{\theta} (z | x_{i}) || p(z))
+\end{equation}
+
+We can then construct the neural network architecture where the encoder model learns a mapping from $x$ to $z$ and the decoder model learns a mapping from $z$ back to $x$,
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.45]{figurer/vae/vae_2.png}
+    \caption{Autoencoder}
+    \label{fig:vae}
+\end{figure}
+The loss function for a variational autoencoder consits of two term, one which penalizes reconstruction error and a second term which encourages that the learned distribution $q_\theta(z|x)$ is as similar to the true prior distribution $p(z)$ as possible. The loss function for one datapoint $x_{i}$ is defined as,
+\begin{equation}
+    l_{i}(\theta, \phi) = - \mathds{E}_{z \sim q\theta(z | x_{i})} [\log p_{\phi} (x_{i} | z)] + \mathbb{KL}(q_{\theta}(z | x_{i}) || p(z))
+\end{equation}
+and the loos for all datapoints is simply the sum of losses,
+\begin{equation}
+    \mathcal{L}(\theta, \phi) = \sum_{i = 0}^{N - 1} l_{i}(\theta, \phi)
+\end{equation}
+
+\subsection{Implementation problems}
+
+As mentioned in section REF the encoder in a standard autoencoder directly output values for the latent state, where the encoder for a VAE outout parameters that describe the distribution for each dimensiion in the latent space. 
+
+
+Rather than directly outputting values for the latent state as we would in a standard autoencoder, the encoder model of a VAE will output parameters describing a distribution for each dimension in the latent space. We assume that the prior follows a Gaussian distribution, so instead of outputting values for the latent state, we output two vectors describing the mean and variance for all the latent space variables. 
+\\ \\
+The decoder will then generate a latent vector by sampling from the distribution and proceed to develop a reconstruction of the original input.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.35]{figurer/vae/vae_network.png}
+    \caption{Autoencoder}
+    \label{fig:vae}
+\end{figure}
+
+But we have a problem here, because when training the model we can't the backprograte the loss trough the distribution layer. Fortunately, we can use the "reparameterization trick" REF, where we randomly sample a $\epsilon$ from a unit Gaussian and then shift the randomly samples $\epsilon$ by the latent distribtuin's mean $\mu$ and scale it by the latent distribution's variance $\sigma$
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.35]{figurer/vae/rep_trick.png}
+    \caption{Autoencoder}
+    \label{fig:vae}
+\end{figure}
+
+
+
+    
+
+
+\end{document}

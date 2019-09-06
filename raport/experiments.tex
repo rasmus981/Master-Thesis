@@ -1,0 +1,387 @@
+\documentclass[11pt]{article}
+\usepackage{mypackages}
+\begin{document}
+
+
+
+\section{Experiments}\label{sec:experiments}
+
+The aim for this project is to produce images of highly homogeneous food items using deep generative models, and examine the effect of using these artificial images as a data augmentation method. For producing artfical images two generative models have been implemented, a variantioal autoencoder and a deep convolutional generative adversarial network. To compare the effect of using generative models for data augmentation, versus the more general data augmentation techniques discussed in section \ref{sec:data_augmentation}, we will solve two practical machine learning problems, the problem of classifying potatoes and the problem of estimating the size of avocado stones using the datasets presented in section \ref{sec:data}. This section will cover the experimental setup, the technical details and the architecture for both the generative models (VAE and DCGAN), the potato classification network and the avocado stone estimation network.
+All experiments will be performed on two NVIDIA Tesla P100 PCIe 16 GB GPU's REFERENCE, which are high end GPU's made for data science usage.
+
+
+\subsection{Dataset generation}
+
+One goal for this project are to investigate the effect using generative models as a data augmentation technique when the size of the training set varies in size. So all the experiments mentied in rest of this section will be performed when $10\%, 20\%, \cdots, 90\% $ of the dataset is used for training, this applies to both potato and avocado problem. One problem with this approach are that $10\%$ of the avocado dataset only correspond to 4 images, and may cause that it to be random how well the model performs, based on which images that are sampled for training. To overcome this problem we gonna sample 10 datasets for each percentage rate for the potato problem, and 5 datasets for the avocado problem. The reason that we only samples 5 datasets for each percentage rate for the avocado problem, is because the artificial generated images, has to be manually labeled, which are time consuming process. The sampling process for generating potato and avocado datasets, are illustrated at figure \ref{fig:experimetns_sampling_potato} and \ref{fig:experiments_sampling_avocado} respectively.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{figurer/experiments/sampling.png}
+    \caption{Dataset sampling process potatoes}
+    \label{fig:experimetns_sampling_potato}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{figurer/experiments/avocado_sampling.png}
+    \caption{Dataset sampling process avocados}
+    \label{fig:experiments_sampling_avocado}
+\end{figure}
+
+After sampling datasets of varying sizes, we have 90 datasets for the potato problem and 45 datasets for the avocado problem.
+
+
+\subsection{Models to generating images of highly homogeneous food items}
+
+To generate highly homogeneous food items, two generative models have been implemented a VAE and a DCGAN. The architecture for the VAE and DCGAN will be identical for generating both potatoes and avocados images.
+
+\subsubsection{Variational Autoencoder architecture}
+
+A variantional autoencoder have been implemented based on theory presented in section \ref{sec:generative_models_vae}. A link to the actual code can be found at Appendix REF. The goal of this experiment is to generate highly homogeneous images of potato's and avocados. The architecture for the encoder and decoder part of the VAE is present at table \ref{tab:experiments_vae_encoder} and \ref{tab:experimetns_vae_decoder} respectively. Figure \ref{fig:experiment_vae} illustrates the architecture of the VAE visually. 
+
+  \begin{table}[h!]
+  \centering
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{*{7}{c}}%%{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  \multicolumn{7}{c}{VAE Encoder architecture}
+  \\
+  \hline
+  \multicolumn{7}{l}{Minibatch size: 16} \\
+  \multicolumn{7}{l}{Optimizer: 16} \\
+  \hline
+   & Input Layer & Encoder Layer 1 & Encoder Layer 2 & Encoder Layer 3 & Mean Latent Space & Variance Latent Space \\
+  \hline
+  \hline
+  Type & Input & Convolutional & Convolutional & Flatten + Dense & Dense & Dense \\
+  \hline
+  Input Dimension & $[128 \times 128 \times 1]$ & $[128 \times 128 \times 1]$ & $[64 \times 64 \times 32]$ & $[32 \times 32 \times 32]$ & $128$ & $128$ & \\
+  \hline
+  Output Dimension & $[128 \times 128 \times 1]$ & $[64 \times 64 \times 32]$ & $[32 \times 32 \times 32]$ & $128$ & $100$ & $100$ & \\
+  \hline
+  Number of kernels & - & 32 & 32 & - & - & - & \\
+  \hline
+  Kernel size & - & 3 & 3 & - & - & - & \\
+  \hline
+  Stride & - & 2 & 2 & - & - & - & \\
+  \hline
+  Activation function & ReLU & ReLU & ReLU & ReLU & - & - & \\
+  \hline
+\end{tabular}
+\end{adjustbox}
+  \caption{VAE encoder architecture}
+  \label{tab:experiments_vae_encoder}
+\end{table}
+
+
+
+  \begin{table}[h!]
+  \centering
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{*{7}{c}}%%{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  \multicolumn{7}{c}{VAE Decoder architecture}
+  \\
+  \hline
+  \multicolumn{7}{l}{Minibatch size: 16} \\
+  \multicolumn{7}{l}{Optimizer: 16} \\
+  \hline
+   & Input Latent Space & Decoder Layer 1 & Decoder Layer 2 & Decoder Layer 3 & Decoder Layer 4 & Output Layer \\
+  \hline
+  \hline
+  Type & Input & Dense + Reshape & Transposed & Transposed & Transposed & Output \\
+  & & & Convolutional & Convolutional & Convolutional & \\
+  \hline
+  Input Dimension & 100 * 2 & 100 &  $[32 \times 32 \times 8]$ & $[64 \times 64 \times 32]$ & $[128 \times 128 \times 32]$ & $[128 \times 128 \times 1]$ \\ \\
+  \hline
+  Output Dimension & 100 & $[32 \times 32 \times 8]$ & $[64 \times 64 \times 32]$ & $[128 \times 128 \times 32]$ & $[128 \times 128 \times 1]$ & $[128 \times 128 \times 1]$ \\ \\
+  \hline
+  Number of kernels & - & & 32 & 32 & 1 & - & \\ \\
+  \hline
+  Kernel size & - & - & 3 & 3 & 3 & - & \\ \\
+  \hline
+  Stride & - & -  & 2 & 2 & - & - & \\ \\
+  \hline
+  Activation function & ReLU & ReLU & ReLU & ReLU & Relu & Sigmoid & \\ \\
+  \hline
+\end{tabular}
+\end{adjustbox}
+  \caption{VAE decoder architecture}
+  \label{tab:experimetns_vae_decoder}
+\end{table}
+
+
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\textwidth]{figurer/experiments/vae.png}
+    \caption{Illustration of the VAE architecture from table \ref{tab:experiments_vae_encoder} and \ref{tab:experimetns_vae_decoder}}
+    \label{fig:experiment_vae}
+\end{figure}
+
+The architecture of my final implementation are inspired on \cite{vae_experiment_1} and \cite{mastersthesis_vae}. The problem with most literature and implementation about variantional autoencoders, focus on very simple problems like the mnist data, where the image are small in size, and huge dataset have been utilized. So it have mostly been an trail and error process, to create this VAE architecture.
+
+\subsubsection{GAN architecture}
+
+Another technique to create artificial images of potatoes and avocados is by using deep convolutional generative adversarial network (DCGAN), which have been implemented based on the theory discussed in section \ref{sec:generative_models_gan}. A link to the code can be found in appendix REF. The goal for this experiment is again to generate artificially images of highly homogeneous food items. The architecture for the generator and discriminator network are present at table \ref{tab:experiments_gan_generator} and \ref{tab:experimetns_gan_discrimantor} respectively. Figure \ref{fig:experiment_gan_encoder} and \ref{fig:experiment_gan_decoder} illustrates the generator and discriminator visually. 
+
+
+  \begin{table}[h!]
+  \centering
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{*{10}{c}}%%{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  \multicolumn{10}{c}{GAN Generator architecture}
+  \\
+  \hline
+  \multicolumn{10}{l}{Minibatch size: 16} \\
+  \multicolumn{10}{l}{Optimizer: 16} \\
+  \hline
+   & Input Layer & Generator Layer 1 & Generator Layer 2 & Generator Layer 3 & Generator Layer 4 & Generator Layer 5 & Generator Layer 6 & Generator Layer 7 & Output Layer \\
+  \hline
+  \hline
+  Type & Input + Dense & Dense + Reshape & Transposed &  Transposed &  Transposed &  Transposed &  Transposed & Transposed & Output \\
+       &       &       & Convolutional & Convolutional & Convolutional & Convolutional & Convolutional & Convolutional &  \\
+  \hline
+  Input Dimension & $50$ & $256$ & $[4 \times 4 \times 16]$ & $[8 \times 8 \times 16]$ & $[16 \times 16 \times 16]$ & $[32 \times 32 \times 16]$ & $[64 \times 64 \times 16]$ & $[128 \times 128 \times 16]$ & $[128 \times 128 \times 1]$\\ \\
+  \hline
+  Output Dimension & $256$ & $[4 \times 4 \times 32]$ & $[8 \times 8 \times 16]$ & $[16 \times 16 \times 16]$ & $[32 \times 32 \times 16]$ & $[64 \times 64 \times 16]$ & $[128 \times 128 \times 16]$ & $[128 \times 128 \times 1]$ & $[128 \times 128 \times 1]$ \\ \\
+  \hline
+  Number of kernels & - & - & 16 & 16 & 16 & 16 & 16 & 1 & - \\ \\
+  \hline
+  Kernel size & - & - & 3 & 3 & 3 & 3 & 3 & 1 & - \\ \\
+  \hline
+  Stride & - & - & 2 & 2 & 2 & 2 & 2 & - & -\\ \\
+  \hline
+  Activation function & ReLU & ReLU & LeakyReLU & LeakyReLU & LeakyReLU & LeakyReLU & LeakyReLU & Sigmoid & - \\ \\
+  \hline
+  Batch Normalization & - & - & - & yes & yes & yes & yes & yes & - \\ \\
+  \hline
+\end{tabular}
+\end{adjustbox}
+  \caption{Gan generator architecture}
+  \label{tab:experiments_gan_generator}
+\end{table}
+
+
+
+
+
+  \begin{table}[h!]
+  \centering
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{*{10}{c}}%%{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  \multicolumn{7}{c}{GAN Discriminator architecture}
+  \\
+  \hline
+  \multicolumn{7}{l}{Minibatch size: 16} \\
+  \multicolumn{7}{l}{Optimizer: 16} \\
+  \hline
+   & Input Layer & Discriminator Layer 1 & Discriminator Layer 2 & Discriminator Layer 3 & Discriminator Layer 4 & Output Layer \\
+  \hline
+  \hline
+  Type & Input + Convolution & Convolution &  Convolution &  Convolution &  Flatten & Dense + Output \\ \\
+  \hline
+  Input Dimension & $[128 \times 128 \times 1]$  & $[64 \times 64 \times 16]$ & $[32 \times 32 \times 16]$ & $[16 \times 16 \times 16]$ & $[8 \times 8 \times 16]$ & $1024$ \\ \\
+  \hline
+  Output Dimension & $[64 \times 64 \times 16]$ & $[32 \times 32 \times 16]$ & $[16 \times 16 \times 16]$ & $[8 \times 8 \times 16]$ & $1024$ & $1$ \\ \\
+  \hline
+  Number of kernels & 16 & 16 & 16 & 16 & - & -  \\ \\
+  \hline
+  Kernel size & 3 & 3 & 3 & 3 & - & - \\ \\
+  \hline
+  Stride & 2 & 2 & 2 & 2 & - & - \\ \\
+  \hline
+  Activation function & LeakyReLU & LeakyReLU & LeakyReLU & LeakyReLU & - & Sigmoid  \\ \\
+  \hline
+  Batch Normalization & yes & yes & yes & yes & - & - \\ \\
+  \hline
+\end{tabular}
+\end{adjustbox}
+  \caption{GAN discriminator architecture}
+  \label{tab:experiments_gan_discriminator}
+\end{table}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\textwidth]{figurer/experiments/encoder_gan.png}
+    \caption{The variational autoencoder used to generate artificial images of both potatoes and avocados}
+    \label{fig:experiment_gan_encoder}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\textwidth]{figurer/experiments/decoder_gan.png}
+    \caption{The variational autoencoder used to generate artificial images of both potatoes and avocados}
+    \label{fig:experiment_gan_decoder}
+\end{figure}
+
+
+
+
+
+\subsection{Classifying potatoes}
+
+
+
+The first problem we gonna look at, is the problem of classifying potatoes. To classify these a convolutional neural network have been implemented. The architecture of the network is presented at table \ref{tab:experiments_potato_cnn}, and illustrated visually at figure \ref{fig:experiment_cnn_potato}. The goal for this experiment is to investigate the effect of using the artificial generated potatoes as data augmentation method when training a classification model, and compare it against more traditional data augmentation techniques like those discussed in section \ref{sec:data_augmentation}. We also gonna explore generative models and the traditional data augmentation methods works when used on varying sizes of the training data. 
+\\ \\
+
+  \begin{table}[h!]
+  \centering
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{*{7}{c}}%%{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  \multicolumn{7}{c}{Potato classification network architecture}
+  \\
+  \hline
+  \multicolumn{7}{l}{Minibatch size: 16} \\
+  \multicolumn{7}{l}{Optimizer: 16} \\
+  \hline
+   & Input Layer & Potato classification & Potato classification & Potato classification & Potato classification & Output Layer \\
+   & & Layer 1 & Layer 2 & Layer 3 & Layer 4 & \\
+  \hline
+  \hline
+  Type & Input + Convolutional & Convolutional & Convolutional &  Flatten + Dense &  Dense & Dense + Output \\ \\
+  \hline
+  Input Dimension &  $[128 \times 128 \times 1]$ &  $[64 \times 64 \times 8]$ &  $[32 \times 32 \times 8]$ &  $[16 \times 16 \times 8]$ & $1024$ & $512$\\ \\
+  \hline
+  Output Dimension & $[64 \times 64 \times 8]$ &  $[32 \times 32 \times 8]$ &  $[16 \times 16 \times 8]$ & $1024$ & $512$ & $3$ \\ \\
+  \hline
+  Number of kernels & $8$ & $8$ & $8$ & - & - & - \\ \\
+  \hline
+  Kernel size & $3$ & $3$ & $3$ & - & - & - \\ \\
+  \hline
+  Stride & $2$ & $2$ & $2$ & - & - & - \\ \\
+  \hline
+  Activation function & ReLU & ReLU & ReLU & ReLU & ReLU & SoftMax \\ \\
+  \hline
+\end{tabular}
+\end{adjustbox}
+  \caption{Potato classification network architecture}
+  \label{tab:experiments_potato_cnn}
+\end{table}
+
+
+
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\textwidth]{figurer/experiments/cnn_potato.png}
+    \caption{The variational autoencoder used to generate artificial images of both potatoes and avocados}
+    \label{fig:experiment_cnn_potato}
+\end{figure}
+
+
+In section \ref{sec:machine_learning} the independent identical distributed (i.i.d) assumption was discussed. But when both the original images and the data augmented versions are utilized to train the network at figure \ref{fig:experiment_cnn_potato}, the training samples are no longer independent to each other, but can still be identical distributed to the samples in the training set. All the original potato images located longitudinally, and the same x-ray scanner is used to capture all the images. Therefore we can split the traditional data augmentation methods into 2 categories those where the data augmented images still are identical distributed to the rest of the training images, and those who don't are identical distributed, because of the augmentation. In section \ref{sec:data_augmentation} the following data augmentation was discussed,
+\begin{itemize}
+    \item Rotation
+    \item Intensity Scaling
+    \item Flipping
+    \item Additive noise
+    \item Intensity Shifting
+\end{itemize}
+For the potato dataset, images that are flipped and rotated 180 degrees are still identical distributed to the rest of training set, while intensity scaling, rotation of 90 and 270 degrees, additive noise and intensity shifting are not. The data generated using the VAE and DCGAN should be close to identical distributes, since the target of a generative model, is to generate data that variations of the training data, by learning the underlying distribution of the data. 
+\\ \\
+General for all experiments are that all $90$ partion datasets will be used every time. When testing the how one dataset performs using a data augmentation technique, the training data is used to train the model, and its test set is used to measure the accuracy on unseen datapoints. Since neural networks uses random initialized weights, and can end up in bad local minimum, one dataset is trained 3 times and the average performance is used. This whole procedure is done for all $90$ datasets (270 trained model). Then we use the results to compute the average performance when $10\%$ of the data is used for training, $20 \%$ of the data is used for training etc.
+\\ \\
+First experiment is to derive a baseline, where no augmentation is used. Second experiment is use each of data augmentation technique individually,
+\begin{itemize}
+    \item Rotation 180
+    \item Flipping
+    \item Rotation 90 270
+    \item Intensity Scaling
+    \item Additive noise
+    \item Intensity Shifting
+\end{itemize}
+Third part of the experiment is generate artifical images of potatoes using the VAE and DCGAN from section REFERENCE. For each dataset three VAE's and three DCGAN's will be trained one for each class (standard, metal and hollow heart). Then we will look into these images, and discuss the quality of these images. Fourth experiment is to using these artfically images for data augmentation in the same manner as with the tradional augmentation methods. Lastly both the traditional and generative data augmentation techniques will be used for augmentation, and we will investigate the effect of using these generative augmentation techniques along with the tradional ones.
+
+
+
+\subsection{Estimating the size avocado stones}
+
+The second problem we gonna look at, is the problem of estimating the size of avocado stone, for this a convolutional neural network have been implemented. The architecture of the network is presented at table \ref{tab:experiments_potato_cnn}, and illustrated visually at figure \ref{fig:experiment_cnn_potato}. 
+
+
+The goal for this experiment is to investigate the effect of using the artificial generated potatoes as data augmentation method when training a classification model, and compare it against more traditional data augmentation techniques like those discussed in section \ref{sec:data_augmentation}. We also gonna explore generative models and the traditional data augmentation methods works when used on varying sizes of the training data. 
+\\ \\
+
+  \begin{table}[h!]
+  \centering
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{*{7}{c}}%%{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  \multicolumn{7}{c}{Avocado stone estimation network architecture}
+  \\
+  \hline
+  \multicolumn{7}{l}{Minibatch size: 16} \\
+  \multicolumn{7}{l}{Optimizer: 16} \\
+  \hline
+   & Input Layer & Potato classification & Potato classification & Potato classification & Potato classification & Output Layer \\
+   & & Layer 1 & Layer 2 & Layer 3 & Layer 4 & \\
+  \hline
+  \hline
+  Type & Input + Convolutional & Convolutional & Convolutional &  Flatten + Dense &  Dense & Dense + Output \\ \\
+  \hline
+  Input Dimension &  $[128 \times 128 \times 1]$ &  $[64 \times 64 \times 8]$ &  $[32 \times 32 \times 8]$ &  $[16 \times 16 \times 8]$ & $1024$ & $512$\\ \\
+  \hline
+  Output Dimension & $[64 \times 64 \times 8]$ &  $[32 \times 32 \times 8]$ &  $[16 \times 16 \times 8]$ & $1024$ & $512$ & $1$ \\ \\
+  \hline
+  Number of kernels & $8$ & $8$ & $8$ & - & - & - \\ \\
+  \hline
+  Kernel size & $3$ & $3$ & $3$ & - & - & - \\ \\
+  \hline
+  Stride & $2$ & $2$ & $2$ & - & - & - \\ \\
+  \hline
+  Activation function & ReLU & ReLU & ReLU & ReLU & ReLU & Linear \\ \\
+  \hline
+\end{tabular}
+\end{adjustbox}
+  \caption{Avocado stone estimation network architecture}
+  \label{tab:experiments_avo_cnn}
+\end{table}
+
+
+
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\textwidth]{figurer/experiments/cnn_avo.png}
+    \caption{The variational autoencoder used to generate artificial images of both potatoes and avocados}
+    \label{fig:experiment_cnn_potato}
+\end{figure}
+
+
+Like potato classifcation problem, we can split the traditional data augmentation methods into 2 categories those where the data augmented images still are identical distributed to the training images, and those who don't are identical distributed, because of the augmentation. In section \ref{sec:data_augmentation} the following data augmentation was discussed,
+\begin{itemize}
+    \item Rotation
+    \item Intensity Scaling
+    \item Flipping
+    \item Additive noise
+    \item Intensity Shifting
+\end{itemize}
+For the avocado dataset, images that are flipped and rotated are still identical distributed to the rest of training set, while intensity scaling, additive noise and intensity shifting are not. The data generated using the VAE and DCGAN should be close to identical distributes, since the target of a generative model, is to generate data that variations of the training data, by learning the underlying distribution of the data. 
+\\ \\
+General for all avocado experiments are that all $45$ partion datasets will be used every time. When testing the how one dataset performs using a data augmentation technique, the training data is used to train the model, and its test set is used to measure the difference between the predict and true size of the avocado stone for unseen datapoints. Since neural networks uses random initialized weights, and can end up in bad local minimums, each dataset is trained 3 times and the average performance is measured. This whole procedure is done for all $45$ datasets (130 trained model). Then we use the results to compute the average performance when $10\%$ of the data is used for training, $20 \%$ of the data is used for training etc.
+\\ \\
+First experiment is to derive a baseline, where no augmentation is used. Second experiment is use each of data augmentation technique individually,
+\begin{itemize}
+    \item Rotating
+    \item Flipping
+    \item Intensity Scaling
+    \item Additive noise
+    \item Intensity Shifting
+\end{itemize}
+Third part of the experiment is generate artifical images of avocados using the VAE and DCGAN from section REFERENCE. For each dataset one VAE and DCGAN are trained, and used to produce a number of artifical images. Then we will look into these images, and discuss the quality of them. Fourth experiment is to use these artfically images for data augmentation in the same manner as was done for the tradional augmentation methods. Lastly both the traditional and generative data augmentation techniques will be used for augmentation, and we will investigate the effect of using these generative augmentation techniques along with the traditional ones.
+
+
+
+
+
+
+
+
+
+
+\end{document}

@@ -1,0 +1,80 @@
+\documentclass[11pt]{article}
+\usepackage{mypackages}
+\begin{document}
+
+
+\section{Classify X-ray images of potatoes}\label{sec:potato_classification}
+
+Until now we have presented a lot of theory, which should provide you with the necessary information to understand the rest of this thesis, which 
+includes information about the experiments performed, the data set used and the result that we obtained. Lastly a discussion and conclussion will be presented.
+\\ \\
+In this chapter we will discuss the problem of classifying X-ray images of potatoes, starting with a description of the dataset used, followed by a explanation of the experiments that we gonna perform.
+
+\subsection{Dataset description}
+
+The potato dataset consists of 135 x-ray images of potatoes, taken from another thesis \cite{Online_Inspection_of_X-ray_Images}. Each of the 135 x-ray images have a corresponding label
+\begin{itemize}
+    \item Perfect (50)
+    \item Metal (49)
+    \item Hollow heart (36)
+\end{itemize}
+The x-ray images with the label "Perfect", are just normal potato's, where images with the label "Metal" are potatoes with a metal needle inserted into the potato. Lastly the images with the label "Hollow heart", are potatoes that have the hollow heart disease. 
+\\ \\
+Hollow heart is an internal disorder where a 'lens' or 'star'-shaped cavity forms in the tuber of the potato CITE. Hollow heart is a physiological disorder in the potato, that means that disease aren't caused by other organism, and can't be transmitted to new potatoes. 
+There are many factors which can cause hollow heart, the primary ones are water, heat stress and calcium deficiency CITE. Figure 1.1 show an example of a potato with a medium sized hollow heart.
+\begin{figure}[!h]\label{fig:hollow_heart}
+    \centering
+    \includegraphics[scale=0.2]{figurer/potato_experiment/Hollow_heart.jpg}
+    \caption{Potato with hollow heart disease. Image is borrowed from \linkhttps{https://potatoes.ahdb.org.uk/}}
+\end{figure}
+
+The following figure shows three images, one from each class,
+
+\begin{figure}[!h]
+     \centering
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figurer/hollow_15_90.jpg}
+         \caption{Image from figure \ref{fig:katofel_data} rotated 90 degrees}
+         \label{fig:rcnn_result1}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figurer/hollow_15_180.jpg}
+        \caption{Image from figure \ref{fig:katofel_data} rotated 180 degrees}
+         \label{fig:rcnn_result2}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figurer/hollow_15_270.jpg}
+         \caption{Image from figure \ref{fig:katofel_data} rotated 270 degrees}
+         \label{fig:rcnn_result3}
+     \end{subfigure}
+    \caption{Image from figure \ref{fig:katofel_data} rotated}
+        \label{fig:rotate_90_180_270}
+\end{figure}
+
+As we see at figure REFERENCE and discussed in section REFERENCE the
+images from the x-ray scans are stretched along the processing, and furthermore the x-ray scans have different shapes. So the raw x-ray images have been preproscces using the computer vision techniques discussed in section \ref{sec:comuter_vision}. All the x-ray images of potatoes have been preprocsed as follows,
+\begin{figure}[!h]\label{fig:potato_preprocess}
+    \centering
+    \includegraphics[scale=0.2]{figurer/potato_experiment/preproces.png}
+    \caption{Preprocesing process for the x-ray images of potatoes}
+\end{figure}
+
+The theory behind the "edge detection and cut" process is discussed in section REFERENCE and the "resize process is mentied in section REFERENCE. At figure REF we see how the images from REF looks after they have been preprossed and at Appendix REF all the preprocced images is shown
+
+FIGUR
+
+
+\subsection{Experiments}
+
+
+
+
+
+
+
+\end{document}

@@ -1,0 +1,145 @@
+\documentclass[11pt]{article}
+\usepackage{mypackages}
+\begin{document}
+
+
+
+\section{Data}\label{sec:data}
+
+To generate images of highly homogeneous food items, we need data.
+This section will cover the datasets used for this project, and the processing process that have been applied.
+
+\subsection{Potato dataset}
+
+The potato dataset consists of 135 x-ray images, divided into three categories, perfect potatoes (50 images), potatoes with small metal needles inserted (49 images) and potatoes with hollow hearts (36 images). The dataset is created for the master thesis "Online Inspection of X-ray Images" by Thorbjørn Louring Koch \cite{Online_Inspection_of_X-ray_Images}. From which it is described that the dataset is created by using the same potatoes for all three classes. First, each potato was scanned, then each potato was scanned while a metal needle of size $1$mm$\times  20$mm was inserted. Then artificially hollow hearts were cut into the tubers of the potatoes, before the last scanning. The reason that the dataset only consists of 36 images of potatoes with hollow heart, is because it was not possible to cut an artificially hollow heart in the smallest potatoes.
+\\ \\
+Hollow heart, it is an internal disorder were a 'lens' or 'star'-shaped cavity forms in the tuber of the potato \cite{hollow_heart1}. Hollow heart is a physiological disorder, that means that disease aren't caused by other organism, and can't be transmitted to new potatoes. 
+The main factors that can cause hollow heart are heat stress and calcium deficiency \cite{hollow_heart1}. Figure \ref{fig:data_hollow_heart} shows an example of a potato with a medium-sized hollow heart.
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.2]{figurer/potato_experiment/Hollow_heart.jpg}
+    \caption{Potato with hollow heart. The image is borrowed from \linkhttps{https://potatoes.ahdb.org.uk/}}
+    \label{fig:data_hollow_heart}
+\end{figure}
+
+\subsection{Prepossessing}
+
+At figure \ref{fig:computer_vision_image_representation} we saw an image of a x-ray scanned potato with hollow heart. The raw x-ray images are stretched along the scanning direction, so all the potato images are preprocessed. The preprocessing procedure is to remove most of the background from the raw x-ray scan with respect to the edges of the potatoes found by the canny edge detection algorithm. Then the images are resized into shape $128 \times 128$ pixels using bicubic interpolation. Lastly, the pixel values are normalized, from a range of $0 - 255$ to range $0 - 1$. The preprocessing procedure is illustrated in figure \ref{fig:data_preproces_potato}.
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{figurer/data/preproces.png}
+    \caption{The preprocessing procedure used on the potato dataset}
+    \label{fig:data_preproces_potato}
+\end{figure}
+\\ \\
+The following figure illustrates one of each class of potatoes after preprocessing.
+
+\begin{figure}[!h]
+     \centering
+     \begin{subfigure}[b]{0.25\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figurer/data/perfect_22.jpg}
+         \caption{Perfect}
+         \label{fig:data_potato_perfect}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.25\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figurer/data/metal_44.jpg}
+        \caption{Metal}
+         \label{fig:data_potato_metal}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.25\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figurer/data/hollow_0.jpg}
+         \caption{Hollow heart}
+         \label{fig:data_potato_hollow}
+     \end{subfigure}
+    \caption{Potatoes after preprocessing}
+        \label{fig:data_potato}
+\end{figure}
+
+In appendix \ref{a:potato_dataset_appendix} all the potato images are presented after preprocessing has been done.
+
+
+\subsection{Avocado dataset}
+
+The second dataset used in this project consists of 42 x-ray images of avocados. The original x-ray scans are taken by Aleksandar Topic for his master thesis, which he at the time of this writing is currently working on. The original dataset contained seven x-ray scanned trays of avocados, one example of these are shown below.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.3]{figurer/data/avo_tray.jpg}
+    \caption{X-ray scan of a tray with avocados}
+    \label{fig:data_avo_tray}
+\end{figure}
+
+For this project only the avocados are of interest, so the avocados have been clipped out. After clipping the x-ray scan from figure \ref{fig:data_avo_tray}, we have five images of avocados.
+
+\begin{figure}[!h]
+     \centering
+     \begin{subfigure}[b]{0.18\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figurer/data/avo0-part0.jpg}
+         \caption{}
+         \label{fig:data_avo_clip_1}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.18\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figurer/data/avo0-part1.jpg}
+         \caption{}
+         \label{fig:data_avo_clip_2}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.18\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figurer/data/avo0-part2.jpg}
+         \caption{}
+         \label{fig:data_avo_clip_3}
+     \end{subfigure}
+         \hfill
+     \begin{subfigure}[b]{0.18\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figurer/data/avo0-part3.jpg}
+         \caption{}
+         \label{fig:data_avo_clip_4}
+     \end{subfigure}
+          \hfill
+     \begin{subfigure}[b]{0.18\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figurer/data/avo0-part4.jpg}
+         \caption{}
+         \label{fig:data_avo_clip_1}
+     \end{subfigure}
+    \caption{Each avocado from figure \ref{fig:data_avo_tray} clipped out}
+        \label{fig:avo_clipped_data}
+\end{figure}
+There are two significant problems with the images of clipped avocados, the data is unlabeled, and the image size varies. To label the size of the avocado stones, a tool called ImageJ has been utilized \cite{ImageJ}. ImageJ is a tool where it is possible to draw geometrical shapes and measure the area of the shape in terms of square pixels,
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.3]{figurer/data/avo_imageJ.png}
+    \caption{An ellipse is drawn around the avocado stone, to measure its area in square pixels}
+    \label{fig:data_imageJ1}
+\end{figure}
+\\ \\
+To handle the varying image sizes, the images have been resized. Unfortunately, resizing also changes the size of the avocado stones changes. Fortunately, the size of the avocado stone fills the same in percentage terms. So by measuring the area of the avocado stone in the resized image, and keeping track of the resize ratio between the original image and the resized one, it is possible to retrace the size of avocado stone in the original image. Below an illustration of the resized avocado from figure \ref{fig:data_imageJ1} is presented, along with its corresponding label.
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.3]{figurer/data/avo_imageJ2.png}
+    \caption{Drawing an polygon around the avocado stone, and measure the area in number of pixels}
+    \label{fig:data_imageJ2}
+\end{figure}
+The shape of the image at figure \ref{fig:data_imageJ1} are $97 \cdot 111 = 10767$ pixels. While resized image from figure \ref{fig:data_imageJ2} contains of $128 \cdot 128 = 16384$ pixels. The original image is $0.657$ times smaller than the resized one. If multiplying the size of the avocado stone from figure \ref{fig:data_imageJ2} with the resize coefficient, we get that the avocado stone in the original image should be approximately $3451 \cdot 0.657 = 2267$ pixels which are quite close to the $2299$ pixels measured. The reason that the numbers aren't completely identical has to occur with the lack of my drawing skills. All the avocado images have been preprocessed following this procedure,
+\begin{figure}[!h]\label{fig:imageJ2}
+    \centering
+    \includegraphics[scale=0.5]{figurer/data/preproces_avo_2.png}
+    \caption{The preprocessing procedure used on the avocado dataset}
+\end{figure}
+
+At appendix \ref{a:avocado_dataset_appendix} are all the avocado images after preprocessing are presented, and a table that shows the size of the avocado stone after preprocessing and their corresponding resize coefficient. 
+
+
+
+
+\end{document}

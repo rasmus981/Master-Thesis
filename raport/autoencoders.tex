@@ -1,0 +1,25 @@
+\documentclass[11pt]{article}
+\usepackage{mypackages}
+\begin{document}
+
+
+\subsection{Autoencoders}
+
+Autoencoders are an unsupervised learning technique, where a neural network is trained to output a reconstruction of its input. The first part of the neural network is called the encoder, which takes in an input and converts it into a smaller dimensionality. The second part of the neural network is called the decoder, and takes the output from the encoder as input and convert it back to the original input dimensionalty,
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=1.0\textwidth]{figurer/autoencoder.png}
+    \caption{Autoencoder}
+    \label{fig:autoencoder}
+\end{figure}
+
+as we see at figure \ref{fig:autoencoder} the autoencoder encode the input until it compressed to some fixed dimensionalty, the output from the encoder is called the latent space representation which are used as input to the decoder which task is recreate the original input, only by using the latent space representation. 
+
+The latent space representation is a compressed knowledge representation of the original input. If all the input features was independent of one another, the compression and subsequent reconstruction would be a very difficult task. However, if there exits some structure between the feature in the data, this can be learned and consequently compressed into lower dimensionalty. When training an autoencoder the network tries to minimize the reconstruction loss defined as,
+\begin{equation}
+    \mathcal{L}(x, \hat{x})
+\end{equation}
+where $x$ is the input to the encoder and $\hat{x}$ is the output from the decoder, and the reconstruction loss is defined as the differences $x$ and $\hat{x}$.
+
+\end{document}

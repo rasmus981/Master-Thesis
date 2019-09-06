@@ -1,0 +1,233 @@
+\documentclass[11pt]{article}
+\usepackage{mypackages}
+\begin{document}
+
+
+
+\section{Computer vision}\label{sec:comuter_vision}
+
+Computer vision is an essential tool when it comes to machine learning problems that include images. This chapter provides the theoretical concepts from computer vision necessary to understand convolution neural network (CNN) and techniques for preprocessing images. The theory is presented to work on grey-scaled images, which are the image structure used in this project. This chapter is based mostly on the book \cite{Jahne05}.
+
+\subsection{Image representation}\label{sec:computer_vision_image_reprsentation}
+
+
+Computer can't handle continuous images, but only arrays or matrices of numbers. For representing an image in a computer, a matrix is used. The shape of the matrix is equal to the height $\times$ width of the image.  Each entry in the matrix contains a numerical value indicating the brightness of the pixel,
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.10]{figurer/computer_vision/representation.png}
+    \caption{Representation of an image}
+    \label{fig:computer_vision_image_representation}
+\end{figure}
+
+\subsection{2D Convolution}\label{sec:computer_vision_convolution}
+
+2D convolution is a highly used operations in computer vision. When performing a 2D convolution an image $I$ and a filter kernel $K$ are used as input, to computes,
+\begin{equation}\label{eq:computer_vision_conv}
+    S(i, j) = (I \ast K)(i, j) = \sum_{m} \sum_{n} I(m, n) K(i - m, j - n)
+\end{equation}
+the output from a 2D convolution is an image $S$ where each pixel value is a weighted sum of its neighboring pixels in the input image $I$. A 2D convolutional performed on a $4 \times 4$ image, with a $3 \times 3$ kernel can be seen in figure \ref{fig:computer_vision_conv2}.
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{figurer/deep_learning/conv.png}
+    \caption{A 2d convolution on a $4 \times 4$ image with a $3 \times 3$ kernel}
+    \label{fig:computer_vision_conv2}
+\end{figure}
+One problem with the convolution shown in figure \ref{fig:computer_vision_conv2}, are that the boundary pixels of the image are lost, to avoid this problem, zero padding can be used. Zero padding is a technique where pixels with intensity zero are placed around the original image, so that the kernel filter fits each pixel in the image. Thereby it is only the padding that is lost in the convolution.
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.45]{figurer/deep_learning/conv2.png}
+    \caption{A 2d convolution with zero padding on a $4 \times 4$ image with a $3 \times 3$ kernel}
+    \label{fig:computer_vison_conv_zero_padding}
+\end{figure}
+
+\subsection{Edge detection}\label{sec:computer_vision_edge_detection}
+
+The image from figure \ref{fig:computer_vision_image_representation} consists mostly of background pixels. The background doesn't hold any relevant information about the object of interest, so we want a method to get rid of it. In this project edge detection will be used to identify where the object of interest is located, so that the background can be removed. The edge detection method used in this project are the canny edge detection algorithm. The algorithm consists of multiple steps,
+\begin{enumerate}
+    \item Applying Gaussian blur filter
+    \item Calculating gradients
+    \item Nonmaximum suppression
+    \item Thresholding with hysteresis
+\end{enumerate}
+
+\subsubsection*{Step 1 - Appying Gaussian blur filter}
+
+First, a 2D convolution is performed between the input image and a $5 \times 5$ Gaussian blur filter. The 2-D Gaussian distribution is with a mean of $(0, 0)$ and a standard deviation of $\sigma=1$ is defined as,
+\begin{equation}
+    G(x, y) = \frac{1}{2 \pi \sigma^{2}} e^{- \frac{x^{2} + y^{2}}{2 \sigma^{2}}}
+\end{equation}
+and can be illustrated as,
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{figurer/computer_vision/gauss.png}
+    \caption{Gaussian distribution with mean of $(0, 0)$ and a standard deviation of $\sigma=1$}
+    \label{fig:computer_vision_gauss_distro}
+\end{figure}
+
+In theory, the Gaussian distribution is non-zero everywhere, but we need a fixed-sized kernel $K$. Fortunately the distribution approach very close to zero three standard deviations away from the mean. Actually approximately $99.7\%$ of the distribution falls within 3 standard deviations \cite{three-sigma-rule}. It is not obvious how to pick the values for the final filter. In this project, an approximation of the Gaussian filter is used to compute the integral under each pixel. The sum of the integrals isn't equal 1, so the filter is re-scaled thus its weights sum to 1.
+\newpage
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.22]{figurer/computer_vision/gaus_filter.png}
+    \caption{Approximated $5 \times 5$ Gaussian distribution}
+    \label{fig:computer_vision_gauss_distro2}
+\end{figure}
+
+When the Gaussian filter is computed, it can be used as the kernel when performing a 2D convolution. The following figure illustrates how the image from figure \ref{fig:computer_vision_image_representation} looks after a 2D convolution have been performed, using the Gaussian blur filter from figure \ref{fig:computer_vision_gauss_distro2} as kernel.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.22]{figurer/computer_vision/report_hollow_33_3.jpg}
+    \caption{Figure \ref{fig:computer_vision_image_representation} after blurring the image with a $5 \times 5$ Gaussian filter}
+    \label{fig:computer_vision_edge_detection_step_1}
+\end{figure}
+
+\subsubsection*{Step 2 - Calculating gradients}
+
+After the image is blurred, the gradients for each single pixel are computed. The Sobel Edge Detector technique is used \cite{sobel_edge_detector}. This technique calculates the first derivative for the $X$ and $Y$ axes using the following convolution kernels,
+\newpage
+\begin{figure}[!h]
+     \centering
+     \begin{subfigure}[b]{0.22\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figurer/computer_vision/horizontal_kernel.png}
+         \caption{Horizontal kernel}
+         \label{fig:computer_vision_kernel1}
+     \end{subfigure}
+     \hspace{2cm}
+     \begin{subfigure}[b]{0.22\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{figurer/computer_vision/vertical_kernel.png}
+         \caption{Vertical kernel}
+         \label{fig:computer_vision_kernel2}
+     \end{subfigure}
+     \caption{The two convolutional kernels used for Sobel edge detection}
+     \label{fig:computer_vision_sobel_kernels}
+\end{figure}
+
+When performing a 2D convolution with the kernels from figure \ref{fig:computer_vision_kernel1} and \ref{fig:computer_vision_kernel2}, the first derivative along the $X$ $Y$ axis are computed separately. The derivatives can then be used to compute the magnitude of the gradient,
+\begin{equation}
+    m_{x, y} = \sqrt{G_{x}^{2} + G_{y}^{2}}
+\end{equation}
+and the direction of the gradient,
+\begin{equation}
+    \theta_{x, y} = \text{arctan}\Big(\frac{G_{x}}{G_{y}}\Big)
+\end{equation}
+where $G_{x}$ and $G_{y}$ are the horizontal and vertical derivatives at point $(x, y)$.
+
+\subsubsection*{Step 3 - Non maximum suppression}
+
+The gradient magnitude and direction are computed for all pixels in the image. Each pixel is then checked, for whether or not it is as a local maximum. Given a pixel and its gradient directions,
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{figurer/computer_vision/non_maximum_supression1.png}
+    \caption{A $3 \times 3$ image and pixel $E$'s gradient direction}
+    \label{fig:computer_vision_non_max_1}
+\end{figure}
+
+we can decide whether or not that pixel is part of an edge, by comparing its gradient magnitude with the neighbor pixels in the gradient directions. So with the example from figure \ref{fig:computer_vision_non_max_1} in mind, the gradient magnitude of pixel $E$, are compared with the gradient magnitude of pixel $D$ and $F$. If the gradient is most significant at pixel $E$ and the magnitude is higher than an upper threshold, pixel $E$ is marked as an edge. After non maximum suppression has been performed for all pixels in an image, the algorithm stops. The output is a binary image, indicating which pixels that are and aren't included in an edge.
+
+
+\subsubsection*{Step 4: Thresholding with Hysterysis}
+
+The last step in the Canny edge detection algorithm, is to grow the edges found in step 3, using thresholding with hysterysis. Thresholding with hysterysis is a simple algorithm.
+\\
+For each pixel in the image, check if that pixel is an edge. If not check the next pixel. If the pixel is part of an edge, look at the two neighbor pixels in the gradient direction. If one or more of the conditions below is true, mark the pixel as an edge.
+\begin{itemize}
+    \item Have same gradient direction as the edge pixel
+    \item Gradient magnitude is greater than the lower threshold
+    \item The gradient magnitude is higher than its neighbours in its gradient directions 
+\end{itemize}
+This is done over and over until there aren't any changes in the image, and are the final output for the canny edge dection algorithm.
+\\ \\
+At figure \ref{fig:computer_vision_cany} the result of performing canny edge detection to the image from figure \ref{fig:computer_vision_image_representation} is presented.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.18]{figurer/computer_vision/report_hollow_33_4.jpg}
+    \caption{Figure \ref{fig:computer_vision_image_representation} after applying canny edge detection}
+    \label{fig:computer_vision_cany}
+\end{figure}
+To cut out the background from figure \ref{fig:computer_vision_image_representation}, we find the first pixel from the top, bottom, left and right side of figure \ref{fig:computer_vision_cany} that are marked as an edge, and slice the original image with respect to those.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.18]{figurer/computer_vision/report_hollow_33_5.jpg}
+    \caption{Figure \ref{fig:image_representation} after cutting the image}
+    \label{fig:computer_vision_cut}
+\end{figure}
+
+
+
+\subsection{Digital Image Interpolation}\label{sec:computer_vision_digital_image_interpolation}
+
+The x-ray images are stretched along the processing direction, like the at figure \ref{fig:computer_vision_image_representation}. Furthermore, the x-ray scans have different shapes, but for the machine learning algorithms used in this project, we want the images to have a fixed shape. The x-ray images will be resized using interpolation to obtain a fixed shape. Interpolation is the process of estimating new data points given a set of known data. In the context of image resizing, interpolation is used to determine new pixel values for an image when the shape changes. In this project, bicubic interpolation is used.
+
+\subsubsection{Cubic Spline interpolation}\label{sec:computer_vision_cubic_spline}
+
+To understand bicubic interpolation, we need to grasp how cubic spline interpolation works, this section is based on \cite{cubic_spline} and \cite{cubic_spline_2}. Cubic spline interpolation applies only in one dimension, but are useful for modeling curves. A cubic spline is represented as a function $f: \mathbb{R} \rightarrow \mathbb{R}$ which are constructed of cubic polynomials $p_{k}(x)$ pieced together. Each cubic polynomial $p_{k}(x)$ defines the cubic spline in a interval,
+
+\begin{equation}
+    f(x) = 
+    \begin{cases}
+    p_{1}(x) \qquad x^{[1]} \leq x < x^{[2]} \\
+    p_{2}(x) \qquad x^{[2]} \leq x < x^{[3]} \\
+    p_{3}(x) \qquad x^{[3]} \leq x < x^{[4]} \\
+    \quad    \vdots \qquad \qquad \qquad \vdots \\
+    p_{n - 1}(x) \qquad x^{[n - 1]} \leq x < x^{[n]}
+    \end{cases}
+\end{equation}
+so given a number of point $(x^{[1]}, y^{[1]}), (x^{[2]}, y^{[2]}), \cdots , (x^{[n]}, y^{[n]})$, where $x^{[1]} < x^{[2]} < \cdots < x^{[m]}$. We can interpolate the function $f(x)$ between each pair of two consecutive points $(x^{[k]}, y^{[k]})$ and $(x^{[k + 1]}, y^{[k + 1]})$  using a third degree polynomial. A third degree polynomial and is derivative is defined as,
+\begin{equation}
+\begin{split}
+    p(x) &= ax^{3} + bx^{2} cx + d \\
+    p'(x) &= 3ax^{2} + 2bx + c
+\end{split}
+\end{equation}
+to decide the values of $a, b, c$ and $d$ for a cubic polynomial between two point $(x^{[k]}, y^{[k]})$ and $(x^{[k+1]}, y^{[k+1]})$ the following constraints have to be satisfied,
+\begin{enumerate}
+    \item The polynomial passes through both point $(x^{[k]}, y^{[k]})$ and $(x^{[k+1]}, y^{[k+1]})$
+    \begin{equation}
+        p_{k}(x^{[k]}) = y^{[k]} \qquad \text{and} \qquad p_{k}(x^{[k + 1]}) = y^{[k + 1]}
+    \end{equation}
+    \item First derivatives match at interior points
+    \begin{equation}
+        \frac{d}{dx} p_{k}(x^{[k + 1]}) = \frac{d}{dx} p_{k + 1}(x^{[k + 1]})
+    \end{equation}
+    \item Second derivatives match at interior points
+    \begin{equation}
+        \frac{d^{2}}{dx^{2}} p_{k}(x^{[k + 1]}) = \frac{d^{2}}{dx^{2}} p_{k + 1}(x^{[k + 1]})
+    \end{equation}
+    \item Second derivatives vanish at the end points
+    \begin{equation}
+        \frac{d^{2}}{dx^{2}} p_{1}(x^{[1]}) = 0 \qquad \text{and} \qquad \frac{d^{2}}{dx^{2}} p_{n - 1}(x^{[n]}) = 0
+    \end{equation}
+\end{enumerate}
+
+Each cubic polynomial $p_{k}$ is effected/effect the cubic polynomials for $p_{k - 1}$ and $p_{k + 1}$. So to determine the function expression $f$, we have to solve a linear system that find the constant for each third-degree polynomial, while the constraints still are met. This can be done using linear algebra by writing the problem as a system of linear equations. I will not cover an example in this report, but if there still is some confusion about how cubic spline interpolation works, check the following cite \cite{cubic_spline}.
+
+\subsection{Bicubic interpolation}\label{sec:bicuibc_interpolation}
+
+Bicubic interpolation is an extension of cubic interpolation discussed in section \ref{sec:computer_vision_cubic_spline}, which interpolating data points on a two-dimensional regular grid like images.
+The idea in bicubic interpolation is that the surrounding 16 pixels $(4 \times 4)$ is taken into account. So given in an image
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.25]{figurer/computer_vision/bicubic_1.png}
+    \caption{An $4 \times 4$ image}
+    \label{fig:bicubic_1}
+\end{figure}
+
+We can now see the problem as computing cubic splines for each of the 4 pixel rows and pixel columns. But as discussed in section \ref{sec:computer_vision_cubic_spline}, the cubic polynomial between a point $p_{k}$ is effected/effect how the cubic polynomial of $p_{k - 1}$, therefore a linear algebra is used, to write the problem as a system of linear equation. The solution to linear systems, provide us with the coefficients describing the third degree polynomials between each pixel. Which we can use to interpolate the whole image from figure \ref{fig:bicubic_1}.
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.25]{figurer/computer_vision/bicubic_3.png}
+    \caption{Figure \ref{fig:bicubic_1} after bicubic interpolation have been applied}
+    \label{fig:computer_vision_cut}
+\end{figure}
+
+Bicubic interpolation creates a surface that a smoother than surfaces obtained by other interpolation techniques like bilinear and nearest-neighbor \cite{Bicubic_interpolation}.
+
+
+
+\end{document}

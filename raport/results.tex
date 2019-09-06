@@ -1,0 +1,530 @@
+\documentclass[11pt]{article}
+\usepackage{mypackages}
+\begin{document}
+
+
+
+\section{Results}\label{sec:results}
+
+For each of the experiments in the 
+
+
+For each of the experiments described in the previous section, its results will be presented in this section.
+
+\subsection{Classification of potatoes}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[scale=0.4]{figurer/results/baseline_potato.png}}
+    \caption{Score achieved in Space Invaders as a function of
+    consumed real-time.}
+    \label{fig:results_baseline_potato}
+\end{figure}
+
+
+
+  \begin{table}[h!]
+  \centering
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{*{11}{c}}%%{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  \multicolumn{11}{c}{\textbf{Potato no augmentation}}
+  \\
+ \hline
+ \textbf{Percentage data} & \textbf{H H} & \textbf{H M} & \textbf{H P} & \textbf{M H} & \textbf{M M} & \textbf{M P} & \textbf{P H} & \textbf{P M} & \textbf{P P} & \textbf{Acc}\\
+ \hline
+ \hline
+ \textbf{10 \%}  & 56.5 \% & 13.3 \% & 30.2 \% & 10.0 \% & 79.7 \% & 10.3 \% & 27.3 \% & 13.9 \% & 58.8 \% & \textbf{0.657} \\
+ \hline
+ \textbf{20 \%} & 60.5 \% & 7.7 \% & 31.7 \% & 4.2 \% & 83.3 \% & 12.5 \% & 26.6 \% & 11.0 \% & 62.4 \% & \textbf{0.695} \\
+ \hline
+ \textbf{30 \%} & 62.3 \% & 6.3 \% & 31.5 \% & 6.2 \% & 81.9 \% & 12.0 \% & 16.1 \% & 6.5 \% & 77.4 \% & \textbf{0.750} \\
+ \hline
+ \textbf{40 \%} & 67.3 \% & 6.1 \% & 26.7 \% & 5.2 \% & 86.9 \% & 7.9 \% & 15.9 \% & 6.4 \%  & 77.7 \% & \textbf{0.781} \\
+ \hline
+ \textbf{50 \%} & 72.6 \% & 8.0 \% & 19.4 \% & 2.7 \% & 89.2 \% & 8.1 \% & 12.8 \% & 8.3 \% & 78.9 \% & \textbf{0.810} \\
+ \hline
+ \textbf{60 \%} & 84.0 \% & 3.8 \% & 12.1 \% & 3.5 \% & 90.3 \% & 6.2 \% & 10.8 \% & 4.5 \% & 84.7 \% & \textbf{0.866} \\
+ \hline
+ \textbf{70 \%} & 73.0 \% & 6.1 \% & 20.9 \% & 2.0 \% & 91.3 \% & 6.7 \% & 7.6 \% & 4.4 \% & 88.0 \% & \textbf{0.852} \\
+ \hline
+\textbf{80 \%} & 77.1 \% & 7.6 \% & 15.2 \%  & 1.3 \% & 95 \% & 3.7 \% & 5.0 \% & 3.0 \% & 92.0 \% & \textbf{0.893} \\
+ \hline
+ \textbf{90 \%} & 79.2 \% & 1.7 \% & 19.2 \% & 5.3 \% & 84.7 \% & 10.0 \% & 2.7 \% & 8.0 \% & 89.3 \% & \textbf{0.848} \\
+ \hline
+\end{tabular}
+\end{adjustbox}
+  \caption{Avocado stone estimation network architecture}
+  \label{tab:experiments_avo_cnn}
+\end{table}
+
+
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[scale=0.4]{figurer/results/flip_rot_potato.png}}
+    \caption{Score achieved in Space Invaders as a function of
+    consumed real-time.}
+    \label{fig:results_baseline_potato}
+\end{figure}
+
+
+
+
+  \begin{table}[h!]
+  \centering
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{*{11}{c}}%%{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  \multicolumn{11}{c}{\textbf{Potato rotation 180}}
+  \\
+ \hline
+ \textbf{Percentage data} & \textbf{H H} & \textbf{H M} & \textbf{H P} & \textbf{M H} & \textbf{M M} & \textbf{M P} & \textbf{P H} & \textbf{P M} & \textbf{P P} & \textbf{Acc}\\
+ \hline
+ \hline
+ \textbf{10 \%}  & 63.4 \% & 4.8 \% & 30.8 \% & 18.3 \% & 67.1 \% & 14.6 \% & 21.3 \% & 3.5 \% & 75.2 \% & \textbf{0.694} \\
+ \hline
+ \textbf{20 \%} & 67.9 \% & 6.0 \% & 26.1 \% & 10.0 \% & 76.2 \% & 13.8 \% & 21.9 \% & 5.4 \% & 72.7 \% & \textbf{0.729} \\
+ \hline
+ \textbf{30 \%} & 73.2 \% & 6.3 \% & 20.5 \% & 9.1 \% & 79.7 \% & 11.2 \% & 8.9 \% & 4.3 \% & 86.9 \% & \textbf{0.806} \\
+ \hline
+ \textbf{40 \%} & 76.5 \% & 4.1 \% & 19.4 \% & 6.9 \% & 79.8 \% & 13.3 \% & 11.1 \% & 3.0 \%  & 85.9 \% & \textbf{0.812} \\
+ \hline
+ \textbf{50 \%} & 83.9 \% & 3.5 \% & 12.6 \% & 5.7 \% & 84.5 \% & 9.7 \% & 5.6 \% & 3.6 \% & 90.8 \% & \textbf{0.867} \\
+ \hline
+ \textbf{60 \%} & 90.2 \% & 3.8 \% & 6.0 \% & 4.7 \% & 88.5 \% & 6.8 \% & 7.2 \% & 4.2 \% & 88.7 \% & \textbf{0.890} \\
+ \hline
+ \textbf{70 \%} & 78.8 \% & 3.9 \% & 17.3 \% & 4.7 \% & 87.6 \% & 7.8 \% & 4.0 \% & 4.0 \% & 92.0 \% & \textbf{0.868} \\
+ \hline
+\textbf{80 \%} & 88.6 \% & 4.8 \% & 6.7 \%  & 2.7 \% & 93.7 \% & 3.7 \% & 2.0 \% & 3.7 \% & 94.3 \% & \textbf{0.926} \\
+ \hline
+ \textbf{90 \%} & 86.7 \% & 0.8 \% & 12.5 \% & 4.0 \% & 84.7 \% & 11.3 \% & 5.3 \% & 2.6 \% & 92.0 \% & \textbf{0.879} \\
+ \hline
+\end{tabular}
+\end{adjustbox}
+  \caption{Avocado stone estimation network architecture}
+  \label{tab:experiments_avo_cnn}
+\end{table}
+
+
+
+
+
+
+
+  \begin{table}[h!]
+  \centering
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{*{11}{c}}%%{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  \multicolumn{11}{c}{\textbf{Potato flipping}}
+  \\
+\hline
+ \textbf{Percentage data} & \textbf{H H} & \textbf{H M} & \textbf{H P} & \textbf{M H} & \textbf{M M} & \textbf{M P} & \textbf{P H} & \textbf{P M} & \textbf{P P} & \textbf{Acc}\\
+ \hline
+ \hline
+ \textbf{10 \%}  & 62.2 \% & 3.5 \% & 34.3 \% & 17.5 \% & 70.2 \% & 12.3 \% & 23.4 \% & 1.3 \% & 75.3 \% & \textbf{0.700} \\
+ \hline
+ \textbf{20 \%} & 66.7 \% & 4.4 \% & 29.0 \% & 9.1 \% & 77.5 \% & 13.4 \% & 20.8 \% & 3.1 \% & 76.1 \% & \textbf{0.741} \\
+ \hline
+ \textbf{30 \%} & 82.3 \% & 4.3 \% & 13.5 \% & 9.0 \% & 81.7 \% & 9.3 \% & 7.0 \% & 3.1 \% & 89.9 \% & \textbf{0.850} \\
+ \hline
+ \textbf{40 \%} & 83.2 \% & 2.0 \% & 14.8 \% & 4.7 \% & 85.6 \% & 9.7 \% & 8.1 \% & 3.4 \%  & 88.4 \% & \textbf{0.860} \\
+ \hline
+ \textbf{50 \%} & 86.5 \% & 3.3 \% & 10.2 \% & 2.7 \% & 87.1 \% & 10.3 \% & 7.7 \% & 3.6 \% & 88.7 \% & \textbf{0.875} \\
+ \hline
+ \textbf{60 \%} & 87.6 \% & 4.5 \% & 7.9 \% & 1.8 \% & 91.0 \% & 7.2 \% & 8.2 \% & 3.0 \% & 88.8 \% & \textbf{0.893} \\
+ \hline
+ \textbf{70 \%} & 87.0 \% & 2.1 \% & 10.9 \% & 3.6 \% & 88.2 \% & 8.2 \% & 7.3 \% & 2.2 \% & 90.4 \% & \textbf{0.887} \\
+ \hline
+\textbf{80 \%} & 91.4 \% & 3.8 \% & 4.8 \%  & 1.3 \% & 93.3 \% & 5.3 \% & 4.0 \% & 2.3 \% & 93.7 \% & \textbf{0.930} \\
+ \hline
+ \textbf{90 \%} & 91.7 \% & 1.7 \% & 6.7 \% & 1.3 \% & 85.3 \% & 13.3 \% & 2.7 \% & 4.0 \% & 93.3 \% & \textbf{0.900} \\
+ \hline
+\end{tabular}
+\end{adjustbox}
+  \caption{Avocado stone estimation network architecture}
+  \label{tab:experiments_avo_cnn}
+\end{table}
+
+
+
+
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[scale=0.4]{figurer/results/bad_augmenation_potato.png}}
+    \caption{Score achieved in Space Invaders as a function of
+    consumed real-time.}
+    \label{fig:results_baseline_potato}
+\end{figure}
+
+
+
+
+  \begin{table}[h!]
+  \centering
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{*{11}{c}}%%{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  \multicolumn{11}{c}{\textbf{Potato rotation 90 270}}
+  \\
+ \hline
+ \textbf{Percentage data} & \textbf{H H} & \textbf{H M} & \textbf{H P} & \textbf{M H} & \textbf{M M} & \textbf{M P} & \textbf{P H} & \textbf{P M} & \textbf{P P} & \textbf{Acc}\\
+ \hline
+ \hline
+ \textbf{10 \%}  & 59.6 \% & 9.0 \% & 31.5 \% & 11.1 \% & 77.3 \% & 11.6 \% & 23.0 \% & 8.3 \% & 68.7 \% & \textbf{0.694} \\
+ \hline
+ \textbf{20 \%} & 57.6 \% & 6.9 \% & 35.5 \% & 4.2 \% & 84.6 \% & 11.2 \% & 19.6 \% & 8.8 \% & 71.7 \% & \textbf{0.726} \\
+ \hline
+ \textbf{30 \%} & 72.7 \% & 6.0 \% & 21.3 \% & 4.8 \% & 89.0 \% & 6.2 \% & 12.6 \% & 4.9 \% & 82.6 \% & \textbf{0.823} \\
+ \hline
+ \textbf{40 \%} & 74.8 \% & 5.6 \% & 19.5 \% & 3.7 \% & 89.3 \% & 7.0 \% & 11.8 \% & 5.2 \%  & 83.0 \% & \textbf{0.830} \\
+ \hline
+ \textbf{50 \%} & 82.8 \% & 4.6 \% & 12.6 \% & 2.9 \% & 90.3 \% & 6.8 \% & 10.1 \% & 4.8 \% & 85.1 \% & \textbf{0.864} \\
+ \hline
+ \textbf{60 \%} & 81.7 \% & 4.8 \% & 13.6 \% & 2.5 \% & 91.7 \% & 5.8 \% & 7.5 \% & 5.7 \% & 86.8 \% & \textbf{0.873} \\
+ \hline
+ \textbf{70 \%} & 81.2 \% & 4.8 \% & 13.9 \% & 2.0 \% & 92.4 \% & 5.6 \% & 6.9 \% & 4.9 \% & 88.2 \% & \textbf{0.879} \\
+ \hline
+\textbf{80 \%} & 83.8 \% & 6.2 \% & 10.0 \%  & 1.0 \% & 96.0 \% & 3.0 \% & 4.7 \% & 2.7 \% & 92.7 \% & \textbf{0.916} \\
+ \hline
+ \textbf{90 \%} & 90.0 \% & 1.7 \% & 8.3 \% & 2.0 \% & 84.7 \% & 13.3 \% & 4.0 \% & 6.0 \% & 90.0 \% & \textbf{0.881} \\
+ \hline
+\end{tabular}
+\end{adjustbox}
+  \caption{Avocado stone estimation network architecture}
+  \label{tab:experiments_avo_cnn}
+\end{table}
+
+
+
+  \begin{table}[h!]
+  \centering
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{*{11}{c}}%%{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  \multicolumn{11}{c}{\textbf{Potato gaus noise}}
+  \\
+ \hline
+ \textbf{Percentage data} & \textbf{H H} & \textbf{H M} & \textbf{H P} & \textbf{M H} & \textbf{M M} & \textbf{M P} & \textbf{P H} & \textbf{P M} & \textbf{P P} & \textbf{Acc}\\
+ \hline
+ \hline
+ \textbf{10 \%}  & 55.2 \% & 15.0 \% & 29.8 \% & 22.5 \% & 41.4 \% & 36.1 \% & 26.2 \% & 16.8 \% & 56.9 \% & \textbf{0.508} \\
+ \hline
+ \textbf{20 \%} & 57.7 \% & 7.2 \% & 35.1 \% & 13.8 \% & 50.3 \% & 35.9 \% & 26.6 \% & 10.5 \% & 62.9 \% & \textbf{0.570} \\
+ \hline
+ \textbf{30 \%} & 63.6 \% & 8.3 \% & 28.1 \% & 15.0 \% & 55.0 \% & 30.0 \% & 17.6 \% & 7.6 \% & 74.8 \% & \textbf{0.646} \\
+ \hline
+ \textbf{40 \%} & 64.2 \% & 6.4 \% & 29.4 \% & 13.7 \% & 61.5 \% & 24.8 \% & 15.0 \% & 10.1 \%  & 74.9 \% & \textbf{0.672} \\
+ \hline
+ \textbf{50 \%} & 70.9 \% & 5.7 \% & 23.3 \% & 10.0 \% & 69.3 \% & 20.6 \% & 12.1 \% & 7.5 \% & 80.4 \% & \textbf{0.738} \\
+ \hline
+ \textbf{60 \%} & 78.8 \% & 6.9 \% & 14.3 \% & 10.8 \% & 71.8 \% & 17.3 \% & 13.8 \% & 9.5 \% & 76.7 \% & \textbf{0.754} \\
+ \hline
+ \textbf{70 \%} & 69.1 \% & 7.9 \% & 23.0 \% & 9.1 \% & 74.2 \% & 16.6 \% & 9.1 \% & 8.2 \% & 82.7 \% & \textbf{0.759} \\
+ \hline
+\textbf{80 \%} & 76.2 \% & 9.0 \% & 14.8 \%  & 7.3 \% & 80.6 \% & 12.0 \% & 7.7 \% & 7.7 \% & 84.7 \% & \textbf{0.810} \\
+ \hline
+ \textbf{90 \%} & 74.2 \% & 9.2 \% &16.7 \% & 11.3 \% & 70.0 \% & 18.7 \% & 7.3 \% & 9.3 \% & 83.3 \% & \textbf{0.760} \\
+ \hline
+\end{tabular}
+\end{adjustbox}
+  \caption{Avocado stone estimation network architecture}
+  \label{tab:experiments_avo_cnn}
+\end{table}
+
+
+
+
+
+
+  \begin{table}[h!]
+  \centering
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{*{11}{c}}%%{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  \multicolumn{11}{c}{\textbf{Potato Scaling}}
+  \\
+ \hline
+ \textbf{Percentage data} & \textbf{H H} & \textbf{H M} & \textbf{H P} & \textbf{M H} & \textbf{M M} & \textbf{M P} & \textbf{P H} & \textbf{P M} & \textbf{P P} & \textbf{Acc}\\
+ \hline
+ \hline
+ \textbf{10 \%}  & 57.4 \% & 8.4 \% & 34.2 \% & 19.6 \% & 55.9 \% & 24.5 \% & 27.1 \% & 10.1 \% & 62.8 \% & \textbf{0.589} \\
+ \hline
+ \textbf{20 \%} & 60.7 \% & 5.5 \% & 33.8 \% & 8.8 \% & 69.3 \% & 21.9 \% & 28.6 \% & 8.4 \% & 63.0 \% & \textbf{0.647} \\
+ \hline
+ \textbf{30 \%} & 65.2 \% & 3.9 \% & 30.9 \% & 10.1 \% & 75.0 \% & 14.9 \% & 15.4 \% & 2.7 \% & 81.9 \% & \textbf{0.750} \\
+ \hline
+ \textbf{40 \%} & 70.8 \% & 4.7 \% & 24.5 \% & 8.0 \% & 79.4 \% & 12.5 \% & 14.3 \% & 5.0 \%  & 80.7 \% & \textbf{0.755} \\
+ \hline
+ \textbf{50 \%} & 77.8 \% & 3.5 \% & 18.7 \% & 6.3 \% & 82.8 \% & 10.9 \% & 12.3 \% & 4.1 \% & 83.6 \% & \textbf{0.818} \\
+ \hline
+ \textbf{60 \%} & 83.3 \% & 2.9 \% & 13.8 \% & 7.2 \% & 85.5 \% & 7.3 \% & 12.0 \% & 3.5 \% & 84.5 \% & \textbf{0.846} \\
+ \hline
+ \textbf{70 \%} & 72.4 \% & 5.8 \% & 21.8 \% & 7.6 \% & 85.1 \% & 7.3 \% & 8.2 \% & 5.8 \% & 86.0 \% & \textbf{0.820} \\
+ \hline
+\textbf{80 \%} & 76.7 \% & 5.7 \% & 17.6 \%  & 4.0 \% & 89.3 \% & 6.7 \% & 8.0 \% & 4.7 \% & 87.3 \% & \textbf{0.853} \\
+ \hline
+ \textbf{90 \%} & 78.3 \% & 5.0 \% & 16.7 \% & 8.7 \% & 81.3 \% & 10.0 \% & 5.3 \% & 3.3 \% & 91.3 \% & \textbf{0.840} \\
+ \hline
+\end{tabular}
+\end{adjustbox}
+  \caption{Avocado stone estimation network architecture}
+  \label{tab:experiments_avo_cnn}
+\end{table}
+
+
+
+
+
+
+
+  \begin{table}[h!]
+  \centering
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{*{11}{c}}%%{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  \multicolumn{11}{c}{\textbf{Potato Shifting}}
+  \\
+ \hline
+ \textbf{Percentage data} & \textbf{H H} & \textbf{H M} & \textbf{H P} & \textbf{M H} & \textbf{M M} & \textbf{M P} & \textbf{P H} & \textbf{P M} & \textbf{P P} & \textbf{Acc}\\
+ \hline
+ \hline
+ \textbf{10 \%}  & 59.2 \% & 8.2 \% & 32.6 \% & 18.9 \% & 55.2 \% & 23.9 \% & 27.4 \% & 10.1 \% & 62.4 \% & \textbf{0.597} \\
+ \hline
+ \textbf{20 \%} & 59.0 \% & 6.0 \% & 35.1 \% & 8.8 \% & 69.8 \% & 21.4 \% & 27.6 \% & 7.0 \% & 65.4 \% & \textbf{0.653} \\
+ \hline
+ \textbf{30 \%} & 63.5 \% & 4.8 \% & 31.7 \% & 10.1 \% & 72.2 \% & 17.7 \% & 16.3 \% & 3.8 \% & 79.9 \% & \textbf{0.727} \\
+ \hline
+ \textbf{40 \%} & 69.4 \% & 4.5 \% & 26.1 \% & 8.7 \% & 78.2 \% & 13.1 \% & 13.6 \% & 4.7 \%  & 81.8 \% & \textbf{0.771} \\
+ \hline
+ \textbf{50 \%} & 78.3 \% & 3.3 \% & 18.3 \% & 6.3 \% & 83.5 \% & 10.3 \% & 11.5 \% & 3.9 \% & 84.7 \% & \textbf{0.825} \\
+ \hline
+ \textbf{60 \%} & 84.0 \% & 3.6 \% & 12.4 \% & 7.7 \% & 85.3 \% & 7.0 \% & 11.3 \% & 4.3 \% & 84.3 \% & \textbf{0.846} \\
+ \hline
+ \textbf{70 \%} & 70.9 \% & 5.2 \% & 23.9 \% & 8.9 \% & 84.0 \% & 7.1 \% & 10.4 \% & 4.9 \% & 84.7 \% & \textbf{0.807} \\
+ \hline
+\textbf{80 \%} & 78.6 \% & 6.7 \% & 14.8 \%  & 4.0 \% & 89.0 \% & 7.0 \% & 8.3 \% & 4.7 \% & 87.0 \% & \textbf{0.856} \\
+ \hline
+ \textbf{90 \%} & 74.2 \% & 7.5 \% & 18.3 \% & 9.3 \% & 80.7 \% & 10.0 \% & 4.0 \% & 4.0 \% & 92.0 \% & \textbf{0.829} \\
+ \hline
+\end{tabular}
+\end{adjustbox}
+  \caption{Avocado stone estimation network architecture}
+  \label{tab:experiments_avo_cnn}
+\end{table}
+
+
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[scale=0.4]{figurer/results/VAE_GAN_potato.png}}
+    \caption{Score achieved in Space Invaders as a function of
+    consumed real-time.}
+    \label{fig:results_baseline_potato}
+\end{figure}
+
+
+
+
+  \begin{table}[h!]
+  \centering
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{*{11}{c}}%%{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  \multicolumn{11}{c}{\textbf{Potatao VAE}}
+  \\
+ \hline
+ \textbf{Percentage data} & \textbf{H H} & \textbf{H M} & \textbf{H P} & \textbf{M H} & \textbf{M M} & \textbf{M P} & \textbf{P H} & \textbf{P M} & \textbf{P P} & \textbf{Acc}\\
+ \hline
+ \hline
+ \textbf{10 \%}  & 43.6 \% & 33.2 \% & 23.2 \% & 19.4 \% & 50.5 \% & 30.1 \% & 21.3 \% & 28.1 \% & 50.6 \% & \textbf{0.487} \\
+ \hline
+ \textbf{20 \%} & 53.9 \% & 24.3 \% & 21.8 \% & 9.7 \% & 70.2 \% & 20.1 \% & 17.8 \% & 22.5 \% & 59.8 \% & \textbf{0.619} \\
+ \hline
+ \textbf{30 \%} & 58.7 \% & 17.3 \% & 24.0 \% & 9.1 \% & 76.0 \% & 14.9 \% & 15.8 \% & 15.5 \% & 68.7 \% & \textbf{0.687} \\
+ \hline
+ \textbf{40 \%} & 65.5 \% & 11.1 \% & 23.5 \% & 6.2 \% & 81.3 \% & 12.5 \% & 12.6 \% & 10.3 \%  & 77.1 \% & \textbf{0.754} \\
+ \hline
+ \textbf{50 \%} & 75.4 \% & 9.8 \% & 14.8 \% & 5.1 \% & 85.1 \% & 9.9 \% & 11.3 \% & 11.6 \% & 77.1 \% & \textbf{0.796} \\
+ \hline
+ \textbf{60 \%} & 79.0 \% & 12.6 \% & 8.3 \% & 4.7 \% & 87.8 \% & 7.5 \% & 8.5 \% & 6.8 \% & 84.6 \% & \textbf{0.844} \\
+ \hline
+ \textbf{70 \%} & 74.2 \% & 10.0 \% & 15.8 \% & 5.8 \% & 86.2 \% & 8.0 \% & 8.7 \% & 7.1 \% & 84.2 \% & \textbf{0.823} \\
+ \hline
+\textbf{80 \%} & 82.9 \% & 7.6 \% & 9.5 \%  & 3.0 \% & 91.6 \% & 5.3 \% & 7.0 \% & 5.3 \% & 87.7 \% & \textbf{0.879} \\
+ \hline
+ \textbf{90 \%} & 73.3 \% & 10.8 \% & 15.8 \% & 6.0 \% & 82.0 \% & 12.0 \% & 5.3 \% & 9.3 \% & 85.3 \% & \textbf{0.807} \\
+ \hline
+\end{tabular}
+\end{adjustbox}
+  \caption{Avocado stone estimation network architecture}
+  \label{tab:experiments_avo_cnn}
+\end{table}
+
+
+
+
+
+
+  \begin{table}[h!]
+  \centering
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{*{11}{c}}%%{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  \multicolumn{11}{c}{\textbf{Potatao GAN}}
+  \\
+ \hline
+ \textbf{Percentage data} & \textbf{H H} & \textbf{H M} & \textbf{H P} & \textbf{M H} & \textbf{M M} & \textbf{M P} & \textbf{P H} & \textbf{P M} & \textbf{P P} & \textbf{Acc}\\
+ \hline
+ \hline
+ \textbf{10 \%}  & 50.1 \% & 19.7 \% & 30.2 \% & 15.3 \% & 59.5 \% & 25.2 \% & 26.7 \% & 18.1 \% & 55.2 \% & \textbf{0.554} \\
+ \hline
+ \textbf{20 \%} & 55.4 \% & 10.6 \% & 34.0 \% & 6.8 \% & 72.2 \% & 21.0 \% & 25.8 \% & 15.2 \% & 58.9 \% & \textbf{0.628} \\
+ \hline
+ \textbf{30 \%} & 59.6 \% & 7.5 \% & 32.9 \% & 9.0 \% & 78.5 \% & 12.5 \% & 16.3 \% & 5.9 \% & 77.8 \% & \textbf{0.732} \\
+ \hline
+ \textbf{40 \%} & 63.0 \% & 8.0 \% & 28.9 \% & 7.5 \% & 82.0 \% & 10.6 \% & 15.1 \% & 10.0 \%  & 74.9 \% & \textbf{0.742} \\
+ \hline
+ \textbf{50 \%} & 73.7 \% & 5.2 \% & 21.1 \% & 4.7 \% & 84.1 \% & 11.2 \% & 16.0 \% & 7.3 \% & 76.7 \% & \textbf{0.786} \\
+ \hline
+ \textbf{60 \%} & 75.0 \% & 7.4 \% & 17.6 \% & 4.2 \% & 88.8 \% & 7.0 \% & 10.7 \% & 6.3 \% & 83.0 \% & \textbf{0.831} \\
+ \hline
+ \textbf{70 \%} & 75.2 \% & 4.8 \% & 20.0 \% & 2.4 \% & 91.3 \% & 6.2 \% & 9.3 \% & 5.8 \% & 84.9 \% & \textbf{0.846} \\
+ \hline
+\textbf{80 \%} & 80.0 \% & 6.2 \% & 13.8 \%  & 1.0 \% & 94.3 \% & 4.6 \% & 6.0 \% & 2.3 \% & 91.7 \% & \textbf{0.896} \\
+ \hline
+ \textbf{90 \%} & 83.3 \% & 0.83 \% & 15.8 \% & 6.7 \% & 84.0 \% & 9.3 \% & 2.7 \% & 4.7 \% & 92.7 \% & \textbf{0.869} \\
+ \hline
+\end{tabular}
+\end{adjustbox}
+  \caption{Avocado stone estimation network architecture}
+  \label{tab:experiments_avo_cnn}
+\end{table}
+
+
+
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[scale=0.4]{figurer/results/VAE_GAN_NO_METAL.png}}
+    \caption{Score achieved in Space Invaders as a function of
+    consumed real-time.}
+    \label{fig:results_baseline_potato}
+\end{figure}
+
+
+
+
+  \begin{table}[h!]
+  \centering
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{*{11}{c}}%%{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  \multicolumn{11}{c}{\textbf{Potatao VAE no metal}}
+  \\
+ \hline
+ \textbf{Percentage data} & \textbf{H H} & \textbf{H M} & \textbf{H P} & \textbf{M H} & \textbf{M M} & \textbf{M P} & \textbf{P H} & \textbf{P M} & \textbf{P P} & \textbf{Acc}\\
+ \hline
+ \hline
+ \textbf{10 \%}  & 54.2 \% & 22.1 \% & 23.8 \% & 15.6 \% & 67.0 \% & 19.5 \% & 21.0 \% & 26.0 \% & 53.0 \% & \textbf{0.584} \\
+ \hline
+ \textbf{20 \%} & 59.1 \% & 14.3 \% & 26.7 \% & 6.8 \% & 77.5 \% & 15.6 \% & 19.4 \% & 19.3 \% & 61.3 \% & \textbf{0.665} \\
+ \hline
+ \textbf{30 \%} & 64.5 \% & 9.5 \% & 26.0 \% & 6.4 \% & 82.1 \% & 11.6 \% & 13.8 \% & 9.1 \% & 77.0 \% & \textbf{0.755} \\
+ \hline
+ \textbf{40 \%} & 71.1 \% & 6.4 \% & 22.6 \% & 4.4 \% & 86.4 \% & 9.2 \% & 14.0 \% & 9.3 \%  & 76.7 \% & \textbf{0.786} \\
+ \hline
+ \textbf{50 \%} & 78.3 \% & 6.1 \% & 15.6 \% & 2.8 \% & 88.8 \% & 8.4 \% & 12.3 \% & 5.6 \% & 82.1 \% & \textbf{0.836} \\
+ \hline
+ \textbf{60 \%} & 83.1 \% & 5.0 \% & 11.9 \% & 3.8 \% & 89.7 \% & 6.5 \% & 13.3 \% & 6.8 \% & 79.8 \% & \textbf{0.843} \\
+ \hline
+ \textbf{70 \%} & 75.2 \% & 4.5 \% & 20.3 \% & 3.3 \% & 90.9 \% & 5.8 \% & 8.7 \% & 5.8 \% & 85.6 \% & \textbf{0.847} \\
+ \hline
+\textbf{80 \%} & 79.0 \% & 7.6 \% & 13.3 \%  & 1.3 \% & 94.0 \% & 4.7 \% & 7.7 \% & 5.0 \% & 87.3 \% & \textbf{0.877} \\
+ \hline
+ \textbf{90 \%} & 77.5 \% & 6.7 \% & 15.8 \% & 6.0 \% & 84.0 \% & 10.0 \% & 6.7 \% & 4.7 \% & 88.7 \% & \textbf{0.838} \\
+ \hline
+\end{tabular}
+\end{adjustbox}
+  \caption{Avocado stone estimation network architecture}
+  \label{tab:experiments_avo_cnn}
+\end{table}
+
+
+  \begin{table}[h!]
+  \centering
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{*{11}{c}}%%{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  \multicolumn{11}{c}{\textbf{Potatao VAE no metal}}
+  \\
+ \hline
+ \textbf{Percentage data} & \textbf{H H} & \textbf{H M} & \textbf{H P} & \textbf{M H} & \textbf{M M} & \textbf{M P} & \textbf{P H} & \textbf{P M} & \textbf{P P} & \textbf{Acc}\\
+ \hline
+ \hline
+ \textbf{10 \%}  & 54.2 \% & 22.1 \% & 23.8 \% & 15.6 \% & 67.0 \% & 19.5 \% & 21.0 \% & 26.0 \% & 53.0 \% & \textbf{0.584} \\
+ \hline
+ \textbf{20 \%} & 59.1 \% & 14.3 \% & 26.7 \% & 6.8 \% & 77.5 \% & 15.6 \% & 19.4 \% & 19.3 \% & 61.3 \% & \textbf{0.665} \\
+ \hline
+ \textbf{30 \%} & 64.5 \% & 9.5 \% & 26.0 \% & 6.4 \% & 82.1 \% & 11.6 \% & 13.8 \% & 9.1 \% & 77.0 \% & \textbf{0.755} \\
+ \hline
+ \textbf{40 \%} & 71.1 \% & 6.4 \% & 22.6 \% & 4.4 \% & 86.4 \% & 9.2 \% & 14.0 \% & 9.3 \%  & 76.7 \% & \textbf{0.786} \\
+ \hline
+ \textbf{50 \%} & 78.3 \% & 6.1 \% & 15.6 \% & 2.8 \% & 88.8 \% & 8.4 \% & 12.3 \% & 5.6 \% & 82.1 \% & \textbf{0.836} \\
+ \hline
+ \textbf{60 \%} & 83.1 \% & 5.0 \% & 11.9 \% & 3.8 \% & 89.7 \% & 6.5 \% & 13.3 \% & 6.8 \% & 79.8 \% & \textbf{0.843} \\
+ \hline
+ \textbf{70 \%} & 75.2 \% & 4.5 \% & 20.3 \% & 3.3 \% & 90.9 \% & 5.8 \% & 8.7 \% & 5.8 \% & 85.6 \% & \textbf{0.847} \\
+ \hline
+\textbf{80 \%} & 79.0 \% & 7.6 \% & 13.3 \%  & 1.3 \% & 94.0 \% & 4.7 \% & 7.7 \% & 5.0 \% & 87.3 \% & \textbf{0.877} \\
+ \hline
+ \textbf{90 \%} & 77.5 \% & 6.7 \% & 15.8 \% & 6.0 \% & 84.0 \% & 10.0 \% & 6.7 \% & 4.7 \% & 88.7 \% & \textbf{0.838} \\
+ \hline
+\end{tabular}
+\end{adjustbox}
+  \caption{Avocado stone estimation network architecture}
+  \label{tab:experiments_avo_cnn}
+\end{table}
+
+
+  \begin{table}[h!]
+  \centering
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{*{11}{c}}%%{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  \multicolumn{11}{c}{\textbf{Potatao GAN no metal}}
+  \\
+ \hline
+ \textbf{Percentage data} & \textbf{H H} & \textbf{H M} & \textbf{H P} & \textbf{M H} & \textbf{M M} & \textbf{M P} & \textbf{P H} & \textbf{P M} & \textbf{P P} & \textbf{Acc}\\
+ \hline
+ \hline
+ \textbf{10 \%}  & 42.8 \% & 32.5 \% & 24.7 \% & 15.8 \% & 57.6 \% & 26.7 \% & 19.9 \% & 30.3 \% & 39.8 \% & \textbf{0.508} \\
+ \hline
+ \textbf{20 \%} & 51.7 \% & 16.7 \% & 31.6 \% & 9.7 \% & 67.7 \% & 22.6 \% & 20.8 \% & 20.8 \% & 58.3 \% & \textbf{0.599} \\
+ \hline
+ \textbf{30 \%} & 58.0 \% & 11.5 \% & 30.5 \% & 8.2 \% & 75.5 \% & 16.3 \% & 15.8 \% & 9.0 \% & 75.2 \% & \textbf{0.707} \\
+ \hline
+ \textbf{40 \%} & 62.1 \% & 10.0 \% & 27.9 \% & 4.9 \% & 80.9 \% & 14.1 \% & 13.1 \% & 10.1 \%  & 76.8 \% & \textbf{0.743} \\
+ \hline
+ \textbf{50 \%} & 75.9 \% & 3.3 \% & 20.7 \% & 3.5 \% & 87.2 \% & 9.3 \% & 12.7 \% & 5.7 \% & 81.6 \% & \textbf{0.822} \\
+ \hline
+ \textbf{60 \%} & 77.6 \% & 5.2 \% & 17.1 \% & 4.8 \% & 85.0 \% & 10.2 \% & 14.7 \% & 6.8 \% & 78.5 \% & \textbf{0.807} \\
+ \hline
+ \textbf{70 \%} & 72.4 \% & 5.2 \% & 22.4 \% & 2.2 \% & 91.3 \% & 6.4 \% & 8.4 \% & 7.3 \% & 84.2 \% & \textbf{0.837} \\
+ \hline
+\textbf{80 \%} & 80.0 \% & 5.7 \% & 14.3 \%  & 2.7 \% & 93.7 \% & 3.7 \% & 7.3 \% & 2.3 \% & 90.3 \% & \textbf{0.889} \\
+ \hline
+ \textbf{90 \%} & 76.7 \% & 2.5 \% & 20.8 \% & 5.3 \% & 84.0 \% & 10.6 \% & 3.3 \% & 6.0 \% & 90.7 \% & \textbf{0.843} \\
+ \hline
+\end{tabular}
+\end{adjustbox}
+  \caption{Avocado stone estimation network architecture}
+  \label{tab:experiments_avo_cnn}
+\end{table}
+
+
+
+
+\end{document}
